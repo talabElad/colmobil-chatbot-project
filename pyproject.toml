@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "colmobil-poc"
+version = "0.1.0"
+description = ""
+authors = ["talabElad <talab@elad.co.il>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.31.0"
+num2words = "^0.5.12"
+pandas = "^2.1.0"
+numpy = "^1.26.0"
+openai = "^0.28.0"
+python-dotenv = "^1.0.0"
+faiss-cpu = "^1.7.4"
+pymysql = "^1.1.0"
+boto3 = "^1.28.0"
+langchain = "^0.0.288"
+pydantic = "^2.3.0"
+sqlalchemy = "^2.0.21"
+IPython = "^8.16.0"
+pillow = "^10.0.1"
+azure-cognitiveservices-speech = "^1.24.0"
+sounddevice = "^0.4.6"
+prettytable = "^3.9.0"
+bs4 = "^0.0.1"
+ipykernel = "^6.29.5"
+jupyterlab = "^4.3.1"
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
