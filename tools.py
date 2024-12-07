@@ -23,11 +23,7 @@ from typing import List, Tuple, Dict
 from prettytable import PrettyTable
 from langchain_core.tools import tool
 import redis
-from langchain_openai import AzureChatOpenAI
-
-
-
-
+from langchain_aws import ChatBedrock
 
 load_dotenv(".env")
 
@@ -36,21 +32,14 @@ username = os.getenv('RDS_USERNAME')
 password = os.getenv('RDS_PASSWORD')
 database = os.getenv('RDS_DATABASE')
 
-endpoint = "database-supermarket-smart.c9owiq2sebpi.us-east-1.rds.amazonaws.com"
-username = "admin"
-password = "Bb123456!"
-database = "databasesupermarketsmart"
-
-os.environ["OPENAI_API_TYPE"]="azure"
-os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
-os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
-os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
-os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
-os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
-os.environ["AZURE_OPENAI_GPT4OMINI_DEPLOYMENT_NAME"]="sahargpt4omini"
-
 print(os.path.abspath(".env"))
 print(endpoint, username, password, database, "----------------------------------------------------------------------------------------------")
+
+endpoint="database-colmobil.c9owiq2sebpi.us-east-1.rds.amazonaws.com"
+username="admin"
+password="Bb123456!"
+database="databasecolmobil"
+
 
 connection = pymysql.connect(
     host=endpoint,
@@ -69,8 +58,12 @@ version = cursor.fetchone()
 print(f"Database version: {version}")
 
     
-def fetch_data(table_name):
-    select_sql = f"SELECT recipe_id, embedding_vector, recipe_name FROM {table_name};"
+def fetch_data(id_column_name:str,table_name:str,list_columns_names:List[str]):    
+    embeddings_columns_names = ["embeddings_vector_"+name for name in list_columns_names]
+    select_sql = f"SELECT {id_column_name}, "
+    for ind,name in enumerate(list_columns_names):
+        select_sql += f"{name}, {embeddings_columns_names[ind]}, "
+    select_sql +=f" FROM {table_name};"
     
     cursor.execute(select_sql)
     
@@ -79,40 +72,35 @@ def fetch_data(table_name):
     ids = []
     embeddings = []
     recipe_names = []
-    for result in results:
-        id, embedding_vector_bytes, recipe_name = result
-        embedding_vector = pickle.loads(embedding_vector_bytes)
-        ids.append(id)
-        recipe_names.append(recipe_name)
-        embeddings.append(embedding_vector.values[0])
     
-    df = pd.DataFrame({'id': ids, 'embedding_vector': embeddings, "recipe_names":recipe_names})
+    results_dict = {}
+    
+    result_len = len(results[0])
+    results_dict[id_column_name]=[]
+    
+    for ind,name in enumerate(list_columns_names):
+        results_dict[name] = []
+        results_dict[embeddings_columns_names[ind]]=[]
+    
+    for result in results:
+        result_list = list(result)
+        results_dict[id_column_name].append(result_list[0])
+        
+        count = 1
+        for ind,name in enumerate(list_columns_names):
+            results_dict[name].append(result_list[count])
+            extracted_embeddings = pickle.loads(result_list[count+1]).values[0]
+            results_dict[embeddings_columns_names[ind]].append(extracted_embeddings)
+            count += 2
+        
+    df = pd.DataFrame(results_dict)
     return df
 
-df_recipes = fetch_data('recipes')
+df_cars = fetch_data('car_id','cars_collection',["car_id","additional_description","model"])
 
 
-def fetch_data(table_name):
-    select_sql = f"SELECT grocery_type_id, embedding_vector FROM {table_name};"
-    
-    cursor.execute(select_sql)
-    
-    results = cursor.fetchall()
-    ids = []
-    embeddings = []
-    for result in results:
-        id, embedding_vector_bytes = result
-        embedding_vector = pickle.loads(embedding_vector_bytes)
-        ids.append(id)
-        embeddings.append(embedding_vector)
-    
-    df = pd.DataFrame({'id': ids, 'embedding_vector': embeddings})
-    return df
-
-df_groceries = fetch_data('groceries_types')
-
-vectors_recipes = np.stack(df_recipes['embedding_vector'].values).astype('float32')
-vectors_groceries = np.stack(df_groceries['embedding_vector'].values).astype('float32')
+vectors_models = np.stack(df_cars['embeddings_vector_model'].values).astype('float32')
+vectors_additional_descriptions = np.stack(df_cars['embeddings_vector_additional_description'].values).astype('float32')
 
 
 
@@ -145,40 +133,37 @@ def generate_embeddings(prompt_data, modelId = "amazon.titan-embed-text-v2:0"):
     return np.array(embedding, dtype=np.float32)
 
 
-index_recipes = faiss.IndexFlatL2(vectors_recipes.shape[1])
-index_recipes.add(vectors_recipes)
+index_additional_descriptions = faiss.IndexFlatL2(vectors_additional_descriptions.shape[1])
+index_additional_descriptions.add(vectors_additional_descriptions)
 
 @tool
-def search_recipes(list_recipe_names: List[str], top_k: int = 2) -> list:
+def search_additional_descriptions(additional_descriptions: str, top_k: int = 3) -> list:
     """
-    search_recipes tool, Perform a similarity search using recipes, and return ids of recipes(which you should search in mysql recipes db)
+    search_additional_descriptions tool, Perform a similarity search using additional_descriptions, and return ids of additional_descriptions.
 
     Args:
-        list_name_of_recipe (List[str]): list that contains name_recipe of recipes to search for.
-        top_k (int): Number of top results to return for each recipe.
+        list_name_of_additional_descriptions (List[str]): list that contains name_additional_descriptions of additional_descriptionss to search for.
+        top_k (int): Number of top results to return for each additional_descriptions.
 
     Returns:
-        list: recipe_ids of the top_k close recipes, the first id in the list is the closest and so on. You must search the recipes with the given ids to know the recipe name.
+        list: additional_descriptions_ids of the top_k close additional_descriptionss, the first id in the list is the closest and so on. You must search the additional_descriptionss with the given ids to know the additional_descriptions name.
         similarity search doesnt mean that the ids are a match, you need to check for validation.
     """
     lst = []
     
-    for recipe_name in list_recipe_names:
-        query_vector = generate_embeddings(recipe_name).reshape(1, -1)
+    query_vector = generate_embeddings(additional_descriptions).reshape(1, -1)
         
-        distances, indices = index_recipes.search(query_vector, top_k)
-        lst.append([recipe_name,[df_recipes.iloc[i].id for i in indices[0].tolist()]])
-        
-    return lst
+    distances, indices = index_additional_descriptions.search(query_vector, top_k)
+    return [df_cars.iloc[i].car_id for i in indices[0].tolist()]
 
 
-index_groceries = faiss.IndexFlatL2(vectors_groceries.shape[1])
-index_groceries.add(vectors_groceries)
+index_models = faiss.IndexFlatL2(vectors_models.shape[1])
+index_models.add(vectors_models)
 
 
 
 @tool
-def search_groceries(list_name_of_grocery: List[str], top_k: int = 3) -> list:
+def search_groceries(model_name: List[str], top_k: int = 3) -> list:
     """
     search_groceries tool, Perform a similarity search using groceries, and return ids of groceries(which you should search in mysql groceries db)
 
@@ -192,10 +177,7 @@ def search_groceries(list_name_of_grocery: List[str], top_k: int = 3) -> list:
     """
     lst = []
     
-    for grocery_name in list_name_of_grocery:
-        query_vector = generate_embeddings(grocery_name).reshape(1, -1)
-        
-        distances, indices = index_groceries.search(query_vector, top_k)
-        lst.append([grocery_name,[df_groceries.iloc[i].id for i in indices[0].tolist()]])
+    query_vector = generate_embeddings(model_name).reshape(1, -1)
     
-    return lst
+    distances, indices = index_models.search(query_vector, top_k)
+    return [model_name.iloc[i].car_id for i in indices[0].tolist()]
