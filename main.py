@@ -1,55 +1,18 @@
-import os
-import re
-import requests
-import sys
-from num2words import num2words
-import os
-import pandas as pd
-import numpy as np
-import tiktoken
-from openai import AzureOpenAI
-import os
-# importing necessary functions from dotenv library
-from dotenv import load_dotenv, dotenv_values
-import faiss
-import numpy as np
-import pymysql
-import boto3
-import pickle
-from langchain.agents import create_sql_agent
-from langchain.agents.agent_toolkits import SQLDatabaseToolkit
-from langchain.sql_database import SQLDatabase
-from langchain.llms.openai import OpenAI
-from langchain.agents import AgentExecutor
-from langchain.callbacks import get_openai_callback
+from dotenv import load_dotenv
 from pydantic import __init__
-from sqlalchemy import create_engine
-import json
-from langchain.agents.tool_calling_agent.base import create_tool_calling_agent
-import faiss
 from IPython.display import Markdown, display
 import tkinter as tk
 from tkinter import Label
 from tkinter import filedialog
-from langchain.tools import StructuredTool
 
 from PIL import Image, ImageTk
-import requests
-import azure.cognitiveservices.speech as speechsdk
-import sounddevice as sd
-import numpy as np
-import wave
 from agents import MasterAgent
 
 agent_executor = MasterAgent()
 
 import tkinter as tk
-import threading
 from tkinter import scrolledtext
-import sounddevice as sd
-import wave
 load_dotenv(".env")
-import azure.cognitiveservices.speech as speechsdk
 
 
 

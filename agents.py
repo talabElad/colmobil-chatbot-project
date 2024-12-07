@@ -1,62 +1,28 @@
-import os
-import re
-import requests
-import sys
-import os
 import pandas as pd
 import json
 import numpy as np
-import tiktoken
-from openai import AzureOpenAI
 import os
 # importing necessary functions from dotenv library
 from dotenv import load_dotenv, dotenv_values
-import faiss
 import numpy as np
-import pymysql
-import boto3
-import pickle
-from langchain.callbacks.base import BaseCallbackHandler
-from langchain.agents import create_sql_agent
-from langchain.agents.openai_functions_agent.agent_token_buffer_memory import AgentTokenBufferMemory
-from langchain.llms.openai import OpenAI
 from langchain.agents import AgentExecutor
-from langchain.callbacks import get_openai_callback
 from pydantic import __init__
 from sqlalchemy import create_engine
 import json
 from langchain.agents.tool_calling_agent.base import create_tool_calling_agent
-import faiss
-from IPython.display import Markdown, display
-import tkinter as tk
-from tkinter import Label
-from tkinter import filedialog
-from langchain.tools import StructuredTool
-from PIL import Image, ImageTk
-import requests
-from typing import List, Tuple
 import threading
 import numpy as np
-import wave
-from langchain.agents import AgentType, create_sql_agent
 from langchain.sql_database import SQLDatabase
 from langchain.agents.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from langchain.prompts.chat import ChatPromptTemplate
 from sqlalchemy import create_engine
 from langchain_aws import ChatBedrock
-
-
-
-# from langchain_community
-import logging
-import os
-import dotenv
 from dotenv import load_dotenv
 from langchain_core.tools import tool
-from tools import search_recipes, search_groceries
+from tools import search_additional_descriptions, search_models
 import redis
 
-# load_dotenv(".env")
+load_dotenv(".env")
 
 
 # endpoint = os.getenv('RDS_ENDPOINT')
@@ -117,7 +83,8 @@ class MasterAgent:
         ]
         )
         tools_list = sql_toolkit
-        tools_list.append(search_recipes)
+        tools_list.append(search_models)
+        tools_list.append(search_additional_descriptions)
         
         manager_agent = create_tool_calling_agent(
             llm=llm,
@@ -127,36 +94,36 @@ class MasterAgent:
         agent_executor = AgentExecutor(agent=manager_agent, tools=tools_list,return_intermediate_steps=True, verbose=True, max_iterations=15)
         return agent_executor
 
-    def update_context(self):
-        response_intermediate_steps = llm.invoke(f"""
-            אתה סוכן שמתפקידו לסכם את הפעולות הסופיות, החשובות והרלוונטיות של הסוכן בהתבסס ובהקשר לתשובת העוזר החכם. הסיכום שלך צריך להתמקד בעיקר בערכי grocery_type_id, recipe_id,ו-barcode, וכמובן השמות או המבצעים שהם מייצגים.
+    # def update_context(self):
+    #     response_intermediate_steps = llm.invoke(f"""
+    #         אתה סוכן שמתפקידו לסכם את הפעולות הסופיות, החשובות והרלוונטיות של הסוכן בהתבסס ובהקשר לתשובת העוזר החכם. הסיכום שלך צריך להתמקד בעיקר בערכי grocery_type_id, recipe_id,ו-barcode, וכמובן השמות או המבצעים שהם מייצגים.
 
-            הנחיות:
+    #         הנחיות:
 
-            סיכום ללא הנמקה: הצג את הסיכום בצורה ממוקדת, ללא הסברים נוספים.
-            you save informatrion only about items that exists in the 
-            שימוש במידע מההיסטוריה:
+    #         סיכום ללא הנמקה: הצג את הסיכום בצורה ממוקדת, ללא הסברים נוספים.
+    #         you save informatrion only about items that exists in the 
+    #         שימוש במידע מההיסטוריה:
 
-            היסטוריה ישנה: old_history_of_actions:{self.context_dict["context_info"]}
-            היסטוריה חדשה: new:{str(self.response["intermediate_steps"])}
-            תשובת העוזר החכם:{self.conv[-1]}
-            הענקת ערכים ל-IDs: ודא שכל ערך ל-IDs (כגון grocery_type_id, recipe_id, barcode) מוצמד נכון ואינו ריק. השתמש אך ורק בערכים הקיימים במאגר, ואל תמציא ערכים חדשים.
+    #         היסטוריה ישנה: old_history_of_actions:{self.context_dict["context_info"]}
+    #         היסטוריה חדשה: new:{str(self.response["intermediate_steps"])}
+    #         תשובת העוזר החכם:{self.conv[-1]}
+    #         הענקת ערכים ל-IDs: ודא שכל ערך ל-IDs (כגון grocery_type_id, recipe_id, barcode) מוצמד נכון ואינו ריק. השתמש אך ורק בערכים הקיימים במאגר, ואל תמציא ערכים חדשים.
 
-            דיוק ואמיתות: אם יש ערכים חסרים או מידע לא זמין, ציין את החוסר במקום להמציא ערכים חדשים. השתמש במידע הקיים בלבד ואל תשאיר ערכים ריקים או לא מדויקים.
-            אל תחזיר מידע ריק לדוגמה:
-            2. **מלפפון**:
-                - **grocery_type_id**: לא סופק
-                - **recipe_id**: לא סופק
-                - **barcode**: לא סופק context_info
+    #         דיוק ואמיתות: אם יש ערכים חסרים או מידע לא זמין, ציין את החוסר במקום להמציא ערכים חדשים. השתמש במידע הקיים בלבד ואל תשאיר ערכים ריקים או לא מדויקים.
+    #         אל תחזיר מידע ריק לדוגמה:
+    #         2. **מלפפון**:
+    #             - **grocery_type_id**: לא סופק
+    #             - **recipe_id**: לא סופק
+    #             - **barcode**: לא סופק context_info
             
-            """)
-        print(self.context_dict["context_info"],"context_info")
-        print(str(self.response["intermediate_steps"]), "intermediate_steps")
-        print(response_intermediate_steps.content, "update_context")
-        self.context_dict["chat_history"] = self.conv
-        self.context_dict["context_info"] = response_intermediate_steps.content
-        self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
-        self.r.hset(self.user_id, 'conv', json.dumps(self.conv))
+    #         """)
+    #     print(self.context_dict["context_info"],"context_info")
+    #     print(str(self.response["intermediate_steps"]), "intermediate_steps")
+    #     print(response_intermediate_steps.content, "update_context")
+    #     self.context_dict["chat_history"] = self.conv
+    #     self.context_dict["context_info"] = response_intermediate_steps.content
+    #     self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
+    #     self.r.hset(self.user_id, 'conv', json.dumps(self.conv))
         
 
 
@@ -169,7 +136,7 @@ class MasterAgent:
         self.response = self.agent_executor.invoke(self.context_dict)
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output']})
-        threading.Thread(target=self.update_context).start()
+        # threading.Thread(target=self.update_context).start()
         return self.response['output']
     
     def initialize_conversation(self):

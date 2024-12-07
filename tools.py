@@ -63,6 +63,7 @@ def fetch_data(id_column_name:str,table_name:str,list_columns_names:List[str]):
     select_sql = f"SELECT {id_column_name}, "
     for ind,name in enumerate(list_columns_names):
         select_sql += f"{name}, {embeddings_columns_names[ind]}, "
+    select_sql = select_sql[:-2]
     select_sql +=f" FROM {table_name};"
     
     cursor.execute(select_sql)
@@ -96,7 +97,7 @@ def fetch_data(id_column_name:str,table_name:str,list_columns_names:List[str]):
     df = pd.DataFrame(results_dict)
     return df
 
-df_cars = fetch_data('car_id','cars_collection',["car_id","additional_description","model"])
+df_cars = fetch_data('car_id','cars_collection',["additional_description","model"])
 
 
 vectors_models = np.stack(df_cars['embeddings_vector_model'].values).astype('float32')
@@ -139,14 +140,14 @@ index_additional_descriptions.add(vectors_additional_descriptions)
 @tool
 def search_additional_descriptions(additional_descriptions: str, top_k: int = 3) -> list:
     """
-    search_additional_descriptions tool, Perform a similarity search using additional_descriptions, and return ids of additional_descriptions.
+    search_additional_descriptions tool, Perform a similarity search using on additional_descriptions, and return car_ids of additional_descriptions(which you should search in mysql cars_collection db)
 
     Args:
-        list_name_of_additional_descriptions (List[str]): list that contains name_additional_descriptions of additional_descriptionss to search for.
-        top_k (int): Number of top results to return for each additional_descriptions.
+        additional_descriptions (str): 
+        top_k (int): Number of top results to return for each car.
 
     Returns:
-        list: additional_descriptions_ids of the top_k close additional_descriptionss, the first id in the list is the closest and so on. You must search the additional_descriptionss with the given ids to know the additional_descriptions name.
+        list: car_ids of the top_k close additional_descriptions, the first car_id in the list is the closest and so on. You must search the additional_descriptions with the given ids to know the additional_descriptions text.
         similarity search doesnt mean that the ids are a match, you need to check for validation.
     """
     lst = []
@@ -163,16 +164,16 @@ index_models.add(vectors_models)
 
 
 @tool
-def search_groceries(model_name: List[str], top_k: int = 3) -> list:
+def search_models(model_name: str, top_k: int = 3) -> list:
     """
-    search_groceries tool, Perform a similarity search using groceries, and return ids of groceries(which you should search in mysql groceries db)
+    search_models tool, Perform a similarity search using models, and return car_ids of models(which you should search in mysql cars_collection db)
 
     Args:
-        list_name_of_grocerie (List[str]): list that contains name_grocerie_type of groceries to search for.example: ["עגבניה", "מלפפון","שוקולד"]
-        top_k (int): Number of top results to return for each grocery.
+        model_name (str): 
+        top_k (int): Number of top results to return for each car.
 
     Returns:
-        list: grocery_type_ids of the top_k close groceries, the first id in the list is the closest and so on. You must search the groceries with the given ids to know the grocery name.
+        list: car_ids of the top_k close models, the first car_id in the list is the closest and so on. You must search the models with the given ids to know the model name.
         similarity search doesnt mean that the ids are a match, you need to check for validation.
     """
     lst = []
@@ -181,3 +182,9 @@ def search_groceries(model_name: List[str], top_k: int = 3) -> list:
     
     distances, indices = index_models.search(query_vector, top_k)
     return [model_name.iloc[i].car_id for i in indices[0].tolist()]
+
+
+
+if __name__ == "__main__":
+    print(search_additional_descriptions("a"))
+    print(search_models("a"))
