@@ -20,6 +20,7 @@ from langchain_aws import ChatBedrock
 from dotenv import load_dotenv
 from langchain_core.tools import tool
 from tools import search_additional_descriptions, search_models
+from docx import Document
 import redis
 
 load_dotenv(".env")
@@ -50,14 +51,7 @@ db = SQLDatabase(engine=engine)
 # Create SQLDatabaseToolkit with the database and the language model
 sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
-chat_leading_questions_dict = json.loads("leading_questions.json")
-
-chat_leading_questions_keys = list(chat_leading_questions_dict.keys())
-chat_leading_questions_str=""
-
-for question_num in range(len(chat_leading_questions_keys)):
-    chat_leading_questions_str += f"\n{question_num+1} - {chat_leading_questions_dict[question_num]}"
-
+chat_leading_questions_doc = Document("leading_questions.docx")
 
 class MasterAgent:
     def __init__(self):
@@ -70,19 +64,20 @@ class MasterAgent:
         [
             ("system", f"""
              אתה סוכן חכם למכירת רכבים שעוזר ללקוחות למצוא את הרכב שהכי מתאים להם.
+             אתה מקצועי ונעים ומשתדל להמעיט במשפטים ארוכים.
              תמיד תשתדל להציע 3 רכבים סופיים אלא אם בקשות המשתמש לא מאפשרות 3 רכבים, אלא רק פחות.
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
-             {chat_leading_questions_str}
+             {chat_leading_questions_doc.paragraphs}
              
              
             """),
-            ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
+            # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
             ("placeholder", "{agent_scratchpad}"),
         ]
         )
-        tools_list = sql_toolkit
+        tools_list = sql_toolkit.get_tools()
         tools_list.append(search_models)
         tools_list.append(search_additional_descriptions)
         
@@ -135,9 +130,9 @@ class MasterAgent:
         print(self.context_dict)
         self.response = self.agent_executor.invoke(self.context_dict)
         self.conv.append({"role": "user", "content":input})
-        self.conv.append({"role": "assistant", "content":self.response['output']})
+        self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
         # threading.Thread(target=self.update_context).start()
-        return self.response['output']
+        return self.response['output'][0]['text']
     
     def initialize_conversation(self):
         if self.r.hexists(self.user_id, 'conv'):

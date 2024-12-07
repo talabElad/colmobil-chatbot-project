@@ -22,23 +22,11 @@ def send_message():
         chat_log.config(state=tk.NORMAL)
         chat_log.insert(tk.END, f"אתה: {user_input}\n", 'rtl')
 
-        response = agent_executor.custom_invoke(user_input,'10')
+        response = agent_executor.custom_invoke(user_input,'25')
         chat_log.insert(tk.END, f"בוט: {response}\n", 'rtl')
         chat_log.config(state=tk.DISABLED)
         entry.delete(0, tk.END)
         chat_log.yview(tk.END)
-
-def upload_image():
-    
-    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.png;*.jpeg")])
-    if file_path:
-        img = Image.open(file_path)
-        
-def upload_audio():
-    file_path = filedialog.askopenfilename(filetypes=[("Audio files", "*.wav;*.mp3")])
-    if file_path:
-        # Process the audio file (e.g., send it for transcription or analysis)
-        print(f"Uploaded audio file: {file_path}")
 
 # Setting up the GUI window
 root = tk.Tk()
@@ -54,12 +42,6 @@ entry.pack(pady=5)
 
 send_button = tk.Button(root, text="שלח", command=send_message)
 send_button.pack()
-
-upload_button = tk.Button(root, text="Upload Image", command=upload_image)
-upload_button.pack(pady=10)
-
-upload_audio_button = tk.Button(root, text="Upload Audio", command=upload_audio)
-upload_audio_button.pack(pady=10)
 
 label = tk.Label(root)
 label.pack()

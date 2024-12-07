@@ -181,7 +181,7 @@ def search_models(model_name: str, top_k: int = 3) -> list:
     query_vector = generate_embeddings(model_name).reshape(1, -1)
     
     distances, indices = index_models.search(query_vector, top_k)
-    return [model_name.iloc[i].car_id for i in indices[0].tolist()]
+    return [df_cars.iloc[i].car_id for i in indices[0].tolist()]
 
 
 

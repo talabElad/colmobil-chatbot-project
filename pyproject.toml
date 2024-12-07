@@ -34,6 +34,7 @@ langchain-aws = ">=0.1.0"
 openpyxl = "^3.1.5"
 chardet = "^5.2.0"
 notebook = "^7.3.1"
+python-docx = "^1.1.2"
 
 
 [build-system]
