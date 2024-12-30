@@ -60,7 +60,7 @@ chat_leading_questions_doc = Document("leading_questions.docx")
 
 class MasterAgent:
     def __init__(self):
-        self.r = redis.Redis(host='supermarketredismemory-0001-001.supermarketredismemory.b4zows.use1.cache.amazonaws.com:6379', port=6379, db=0)
+        self.r = redis.Redis(host='tal-redis-elasticache-0001-001.tal-redis-elasticache.b4zows.use1.cache.amazonaws.com', port=6379, db=0)
         self.agent_executor = self.create_master_agent()
         self.response = ""
     
@@ -74,7 +74,15 @@ class MasterAgent:
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
              {chat_leading_questions_doc.paragraphs}
              
-             
+            when you find matching cars to the user between 3 to 1, you should use a specific format as a response:
+            there are 2 constant values: "car_brand" and "car_model".
+            and the others can change depend on what you think the user is intrested in,
+            use the sql column names as field names.
+            example of a response:
+            I found the best cars for you, and feel free to guide me more:
+            
+            ||| "car
+            
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
