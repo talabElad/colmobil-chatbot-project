@@ -58,11 +58,11 @@ def handle_post_main_chat():
     
     print(f"Parsed data: {data}")
     response = agent_executor.custom_invoke(data['text_input'], data['user_id'])
-    print(f"Received data: {data}")
-    groceries_options = check_for_groceries_options(response)
+    # print(f"Received data: {data}")
+    # groceries_options = check_for_groceries_options(response)
    
-    response_multiline = f"""{re.sub(r'\s*\|\|\|.*', '', response)}"""
-    response_data = {"llm_response": response_multiline,"groceries_options":groceries_options,"user_id":data['user_id']}
+    # response_multiline = f"""{re.sub(r'\s*\|\|\|.*', '', response)}"""
+    response_data = {"llm_response": response,"groceries_options":[],"user_id":data['user_id']}
     print(response_data)
     return jsonify(response_data), 200
 
