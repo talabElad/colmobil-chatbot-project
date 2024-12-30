@@ -1,12 +1,8 @@
 import os
 import requests
-import os
 import pandas as pd
-import numpy as np
-import os
 from dotenv import load_dotenv
 import faiss
-import numpy as np
 import pymysql
 import boto3
 import pickle
@@ -15,13 +11,10 @@ from sqlalchemy import create_engine
 import json
 import faiss
 from bs4 import BeautifulSoup
-import requests
-from PIL import Image
-import requests
 import numpy as np
 from typing import List, Tuple, Dict
-from prettytable import PrettyTable
 from langchain_core.tools import tool
+import redis
 from langchain_aws import ChatBedrock
 
 load_dotenv(".env")

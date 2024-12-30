@@ -1,57 +1,21 @@
 import os
-import re
-import requests
-import sys
-import os
-import pandas as pd
-import numpy as np
-from openai import AzureOpenAI
-import os
 # importing necessary functions from dotenv library
 from dotenv import load_dotenv, dotenv_values
-import faiss
 import numpy as np
-import pymysql
-import boto3
-import pickle
-from langchain_community.agent_toolkits.sql.base import create_sql_agent
-from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from langchain_community.utilities import SQLDatabase
-from langchain_community.llms import OpenAI
-from langchain.agents import AgentExecutor
-from langchain_community.callbacks.manager import get_openai_callback
 from pydantic import __init__
 from sqlalchemy import create_engine
 import json
-from langchain.agents.tool_calling_agent.base import create_tool_calling_agent
-import faiss
-from IPython.display import Markdown, display
-import tkinter as tk
-from tkinter import Label
-from tkinter import filedialog
-from langchain.tools import StructuredTool
-
-from PIL import Image, ImageTk
-import requests
 import numpy as np
-import wave
 from agents import MasterAgent
-
 agent_executor = MasterAgent()
-
-import tkinter as tk
-import threading
-from tkinter import scrolledtext
-import wave
 load_dotenv(".env")
-import requests
 from flask import Flask, request, jsonify
-import logging
 import redis
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import redis
 
+agent_executor = MasterAgent()
 
 app = Flask(__name__)
 redis_conn = redis.Redis(host='supermarketredismemory-0001-001.supermarketredismemory.b4zows.use1.cache.amazonaws.com', port=6379, db=0)
