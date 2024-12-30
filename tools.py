@@ -22,7 +22,6 @@ import numpy as np
 from typing import List, Tuple, Dict
 from prettytable import PrettyTable
 from langchain_core.tools import tool
-import redis
 from langchain_aws import ChatBedrock
 
 load_dotenv(".env")

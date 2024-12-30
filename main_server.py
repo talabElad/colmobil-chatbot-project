@@ -2,11 +2,9 @@ import os
 import re
 import requests
 import sys
-from num2words import num2words
 import os
 import pandas as pd
 import numpy as np
-import tiktoken
 from openai import AzureOpenAI
 import os
 # importing necessary functions from dotenv library
@@ -35,8 +33,6 @@ from langchain.tools import StructuredTool
 
 from PIL import Image, ImageTk
 import requests
-import azure.cognitiveservices.speech as speechsdk
-import sounddevice as sd
 import numpy as np
 import wave
 from agents import MasterAgent
@@ -46,24 +42,19 @@ agent_executor = MasterAgent()
 import tkinter as tk
 import threading
 from tkinter import scrolledtext
-import sounddevice as sd
 import wave
 load_dotenv(".env")
-import azure.cognitiveservices.speech as speechsdk
 import requests
 from flask import Flask, request, jsonify
-from rediscluster import RedisCluster
 import logging
 import redis
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from basket_tools import BasketTools, get_all_groceries_in_sale
 import redis
 
-basket_tools = BasketTools()
 
 app = Flask(__name__)
-redis_conn = redis.Redis(host='localhost', port=6379, db=0)
+redis_conn = redis.Redis(host='supermarketredismemory-0001-001.supermarketredismemory.b4zows.use1.cache.amazonaws.com', port=6379, db=0)
 
 # @app.before_request
 # def ensure_utf8():
