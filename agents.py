@@ -60,7 +60,7 @@ chat_leading_questions_doc = Document("leading_questions.docx")
 
 class MasterAgent:
     def __init__(self):
-        self.r = redis.Redis(host='tal-redis-elasticache-0001-001.tal-redis-elasticache.b4zows.use1.cache.amazonaws.com', port=6379, db=0)
+        self.r = redis.Redis(host='localhost', port=6379, db=0)
         self.agent_executor = self.create_master_agent()
         self.response = ""
     

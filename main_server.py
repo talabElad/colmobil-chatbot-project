@@ -18,7 +18,7 @@ import redis
 agent_executor = MasterAgent()
 
 app = Flask(__name__)
-redis_conn = redis.Redis(host='tal-redis-elasticache-0001-001.tal-redis-elasticache.b4zows.use1.cache.amazonaws.com', port=6379, db=0)
+redis_conn = redis.Redis(host='localhost', port=6379, db=0)
 
 # @app.before_request
 # def ensure_utf8():
