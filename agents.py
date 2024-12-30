@@ -148,14 +148,16 @@ class MasterAgent:
         return self.response['output'][0]['text']
     
     def initialize_conversation(self):
+        print("1")
         if self.r.hexists(self.user_id, 'conv'):
             self.context_dict = json.loads(self.r.hget(self.user_id, 'context_dict'))  # Set a hash field
+            
             self.conv = json.loads(self.r.hget(self.user_id, 'conv'))
         else:
             self.context_dict = {"input":"","chat_history":[],"context_info":""}
             self.conv=[]
             self.r.hset(self.user_id, 'basket_dict',json.dumps({}))
-            
+        print("2")
         
         
 
