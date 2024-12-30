@@ -1,51 +1,36 @@
-import os
-import os
-# importing necessary functions from dotenv library
-from dotenv import load_dotenv, dotenv_values
-import faiss
-import numpy as np
-import pymysql
-import boto3
-import pickle
-
-import numpy as np
-from sqlalchemy import create_engine
-from langchain_aws import ChatBedrock
-
-# from langchain_community
-import logging
-import os
-import dotenv
-from dotenv import load_dotenv
+from langchain_aws import ChatBedrockConverse
 from langchain_core.tools import tool
-import redis
-import pandas as pd
 
-# load_dotenv(".env")
+@tool(response_format="content_and_artifact")
+def simple_calculator(a: int, b: int):
+    """Use this tool to calcuate the sum of two integers.
 
-# endpoint="database-colmobil.c9owiq2sebpi.us-east-1.rds.amazonaws.com"
-# username="admin"
-# password="Bb123456!"
-# database="databasecolmobil"
+    Args:
+        a (int): The first integer.
+        b (int): The second integer.
 
-# llm = ChatBedrock(
-#     model_id='anthropic.claude-3-5-sonnet-20240620-v1:0',
-#     model_kwargs=dict(temperature=0))
+    Returns:
+        int: The sum of the two integers.
+    """
+    return a + b
 
-# messages = [
-#     (
-#         "system",
-#         "You are a helpful assistant that translates English to French. Translate the user sentence.",
-#     ),
-#     ("human", "I love programming."),
-# ]
+llm = ChatBedrockConverse(
+    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    temperature=0,
+    region_name="us-east-1",
+    provider="anthropic"
+).bind_tools(tools=[simple_calculator])
 
-# print(llm.invoke("hi"))
-import pandas as pd
-import chardet
+a = llm.stream(
+    input=[
+        ("human", "Hello"),
+    ],
+)
 
-df = pd.read_excel("colmobil (1).xlsx")
+full = next(a)
 
-# for index, row in df.iterrows():
-#     print(row)
-print(df.columns)
+for x in a:
+    print(x)
+    full += x
+
+print(full)

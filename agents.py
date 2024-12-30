@@ -22,6 +22,8 @@ from langchain_core.tools import tool
 from tools import search_additional_descriptions, search_models
 from docx import Document
 import redis
+from langchain_aws import ChatBedrockConverse
+
 
 load_dotenv(".env")
 
@@ -36,9 +38,12 @@ username="admin"
 password="Bb123456!"
 database="databasecolmobil"
 
-llm = ChatBedrock(
-    model_id='anthropic.claude-3-5-sonnet-20240620-v1:0',
-    model_kwargs=dict(temperature=0))
+llm = ChatBedrockConverse(
+    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    temperature=0,
+    region_name="us-east-1",
+    provider="anthropic"
+)
 
 
 # Create a SQLDatabase object
