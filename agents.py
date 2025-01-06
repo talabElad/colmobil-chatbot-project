@@ -43,7 +43,7 @@ llm = ChatBedrockConverse(
     temperature=0,
     region_name="us-east-1",
     provider="anthropic",
-    stop_sequences = "|@|@|"
+    stop_sequences = ["|@|@|"]
 )
 
 
