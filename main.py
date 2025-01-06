@@ -7,7 +7,7 @@ import requests
 import json
 
 # URL of your running Flask server
-url = 'http://3.230.161.198:5001/main_chat'
+url = 'http://54.158.73.214:5001/main_chat'
 
 # Headers for the request
 headers = {'Content-Type': 'application/json; charset=utf-8'}
