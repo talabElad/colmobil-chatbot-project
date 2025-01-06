@@ -58,6 +58,8 @@ sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
 chat_leading_questions_doc = Document("leading_questions.docx")
 
+database_column_names_hebrew = Document("database_column_names_hebrew.docx")
+
 class MasterAgent:
     def __init__(self):
         self.r = redis.Redis(host='localhost', port=6379, db=0)
@@ -75,14 +77,18 @@ class MasterAgent:
              {chat_leading_questions_doc.paragraphs}
              
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response:
-            there are 2 constant values: "car_brand" and "car_model".
+            there are 2 constant values: מותג, דגם, קישור לתמונה
             and the others can change depend on what you think the user is intrested in,
-            use the sql column names as field names.
+            only use the the next field names:
+            {database_column_names_hebrew}
+            
             example of a response:
-            I found the best cars for you, and feel free to guide me more:
+            מצאתי הרכבים שמתאימים לך ביותר, אתה כמובן יכול להמשיך להכווין אותי:
             
-            ||| "car
-            
+            ||| "Image_URL":"https://example.com/car1","יצרן":"Mazda", "דגם":"CX-5","מספר דלתות":"4", "נפח תא מטען (ליטר)":"500", "מחיר בסיסי (₪)":"120000", "מערכת בטיחות":"Advanced" |
+                "Image_URL":"https://example.com/car2","יצרן":"Mercedes", "דגם":"GLC","מספר דלתות":"5", "נפח תא מטען (ליטר)":"550", "מחיר בסיסי (₪)":"250000", "מערכת בטיחות":"Advanced" |
+                "Image_URL":"https://example.com/car3","יצרן":"Toyota", "דגם":"Corolla","מספר דלתות":"4", "נפח תא מטען (ליטר)":"470", "מחיר בסיסי (₪)":"95000", "מערכת בטיחות":"Basic" |
+
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
