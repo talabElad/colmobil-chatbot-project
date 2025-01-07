@@ -62,7 +62,7 @@ def handle_post_main_chat():
     if '|||' in response:
         car_suggestions_str_list = response.split('|||')[-1].split('|')
         for car_fields_str in car_suggestions_str_list:
-            car_fields_lst_str = car_fields_str.split(',')
+            car_fields_lst_str = car_fields_str.split(',,')
             car_fields_list = []
             for car_field_and_val_str in car_fields_lst_str:
                 car_fields_dict = {}
