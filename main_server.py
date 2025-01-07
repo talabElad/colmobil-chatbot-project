@@ -73,7 +73,8 @@ def handle_post_main_chat():
                 car_fields_list.append(car_fields_dict)
             car_suggestions_list.append(car_fields_list)
         print(car_suggestions_list)
-    response_data = {"llm_response": response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
+    llm_response = response.split('|||')[0]
+    response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
     return jsonify(response_data), 200
 
