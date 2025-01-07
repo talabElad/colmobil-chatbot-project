@@ -66,6 +66,7 @@ def handle_post_main_chat():
             car_fields_list = []
             for car_field_and_val_str in car_fields_lst_str:
                 car_fields_dict = {}
+                print("car_field_and_val_str: ",car_field_and_val_str)
                 key_str, val_str = car_field_and_val_str.strip().split(':',1)
                 car_fields_dict['field_name'] = key_str
                 car_fields_dict['field_value'] = val_str
