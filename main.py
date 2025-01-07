@@ -23,6 +23,7 @@ def send_message():
         response = requests.post(url, headers=headers, data=json.dumps(data))
 
         response = response.json()
+        print(response)
         response = response["llm_response"]
         chat_log.insert(tk.END, f"בוט: {response}\n", 'rtl')
         chat_log.config(state=tk.DISABLED)

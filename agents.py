@@ -88,9 +88,9 @@ class MasterAgent:
             example of a response:
             מצאתי הרכבים שמתאימים לך ביותר, אתה כמובן יכול להמשיך להכווין אותי:
             
-            ||| "Image_URL":"https://example.com/car1","יצרן":"Mazda", "דגם":"CX-5","מספר דלתות":"4", "נפח תא מטען (ליטר)":"500", "מחיר בסיסי (₪)":"120000", "מערכת בטיחות":"Advanced","reason":"*give 1 line of reason for this car choice*" |
-                "Image_URL":"https://example.com/car2","יצרן":"Mercedes", "דגם":"GLC","מספר דלתות":"5", "נפח תא מטען (ליטר)":"550", "מחיר בסיסי (₪)":"250000", "מערכת בטיחות":"Advanced","reason":"*give 1 line of reason for this car choice*" |
-                "Image_URL":"https://example.com/car3","יצרן":"Toyota", "דגם":"Corolla","מספר דלתות":"4", "נפח תא מטען (ליטר)":"470", "מחיר בסיסי (₪)":"95000", "מערכת בטיחות":"Basic","reason":"*give 1 line of reason for this car choice*" |@|@|
+            ||| Image_URL:https://example.com/car1,יצרן:Mazda, דגם:CX-5,מספר דלתות:4, נפח תא מטען (ליטר):500, מחיר בסיסי (₪):120000, מערכת בטיחות:Advanced,reason:*give 1 line of reason for this car choice* |
+                Image_URL:https://example.com/car2,יצרן:Mercedes, דגם:GLC,מספר דלתות:5, נפח תא מטען (ליטר):550, מחיר בסיסי (₪):250000, מערכת בטיחות:Advanced,reason:*give 1 line of reason for this car choice* |
+                Image_URL:https://example.com/car3,יצרן:Toyota, דגם:Corolla,מספר דלתות:4, נפח תא מטען (ליטר):470, מחיר בסיסי (₪):95000, מערכת בטיחות:Basic,reason:*give 1 line of reason for this car choice* |@|@|
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
