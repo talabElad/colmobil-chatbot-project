@@ -52,7 +52,45 @@ connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database
 
 # Create the SQLAlchemy engine
 engine = create_engine(connection_string)
-db = SQLDatabase(engine=engine)
+
+
+
+
+
+class CustomSQLDatabase(SQLDatabase):
+    def get_table_info(self, table_name: str = None) -> str:
+        """
+        Override to filter specific tables and columns.
+        """
+        allowed_table = "cars_collection"
+        allowed_columns = ["car_id", "has_sunroof","ground_clearance_mm","charging_time_minutes","num_of_doors", 
+        "additional_description","car_type","model",
+        "brand","creation_year","engine_type","engine_displacement_liters","horsepower","torque_nm","drive_type",
+        "gearbox_type","num_of_gears","acceleration_0_100","top_speed_kmh","avg_energy_consumption_kwh","combined_fuel_consumption_liters",
+        "electric_driving_range_km","battery_capacity_kwh","trunk_capacity_liters","num_of_seats","fuel_type","length_mm",
+        "width_mm","height_mm","wheelbase_mm","curb_weight_kg","basic_price_nis","safety_system_type","multimedia_system_type",
+        "screen_size","wheel_rim_size_max","wheel_rim_size_min","front_lighting_type","climate_control_system_type","rear_lighting_type",
+        "vehicle_warranty_years","battery_warranty_years","image_url"] 
+
+        # Restrict to the specified table
+        if table_name and table_name != allowed_table:
+            return ""
+
+        # Fetch table schema information
+        table_info = super().get_table_info(table_name)
+        if not table_name:
+            return f"Table: {allowed_table}\n"
+
+        # Filter the column details
+        filtered_columns_info = "\n".join(
+            [line for line in table_info.split("\n") if any(col in line for col in allowed_columns)]
+        )
+        return f"Table: {allowed_table}\n{filtered_columns_info}"
+
+
+
+db = CustomSQLDatabase(engine=engine)
+
 
 # Create SQLDatabaseToolkit with the database and the language model
 sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
