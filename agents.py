@@ -109,6 +109,7 @@ class MasterAgent:
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
              {chat_leading_questions_doc.paragraphs}
              
+            before making an sql query, always check the available column names in the table.
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there are 4 constant values: מותג, דגם, קישור לתמונה, reason
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
