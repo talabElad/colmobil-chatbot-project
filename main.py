@@ -21,7 +21,6 @@ def send_message():
         data = {'text_input': user_input, 'user_id': '3'}
         
         response = requests.post(url, headers=headers, data=json.dumps(data))
-
         response = response.json()
         print(response)
         response = response["llm_response"]

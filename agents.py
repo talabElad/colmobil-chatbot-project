@@ -7,7 +7,7 @@ from dotenv import load_dotenv, dotenv_values
 import numpy as np
 from langchain.agents import AgentExecutor
 from pydantic import __init__
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect
 import json
 from langchain.agents.tool_calling_agent.base import create_tool_calling_agent
 import threading
@@ -15,7 +15,7 @@ import numpy as np
 from langchain.sql_database import SQLDatabase
 from langchain.agents.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from langchain.prompts.chat import ChatPromptTemplate
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData, Table
 from langchain_aws import ChatBedrock
 from dotenv import load_dotenv
 from langchain_core.tools import tool
@@ -53,20 +53,25 @@ connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database
 # Create the SQLAlchemy engine
 engine = create_engine(connection_string)
 
+# Use SQLAlchemy MetaData to reflect the database schema
+inspector = inspect(engine)
+
+# Get column names for the 'cars_collection' table
+columns = inspector.get_columns('cars_collection')
+column_names = [column['name'] for column in columns]
+clean_column_names = []
+for column_name in column_names:
+    if not "embeddings" in column_name:
+        clean_column_names.append(column_name)
+print('Columns: , ')
+
 class CustomSQLDatabase(SQLDatabase):
-    def get_table_info(self, table_name: str = None) -> str:
+    def get_table_info(self, column_names, table_name: str = None) -> str:
         """
         Override to filter specific tables and columns.
         """
         allowed_table = "cars_collection"
-        allowed_columns = ["car_id", "has_sunroof","ground_clearance_mm","charging_time_minutes","num_of_doors", 
-        "additional_description","car_type","model",
-        "brand","creation_year","engine_type","engine_displacement_liters","horsepower","torque_nm","drive_type",
-        "gearbox_type","num_of_gears","acceleration_0_100","top_speed_kmh","avg_energy_consumption_kwh","combined_fuel_consumption_liters",
-        "electric_driving_range_km","battery_capacity_kwh","trunk_capacity_liters","num_of_seats","fuel_type","length_mm",
-        "width_mm","height_mm","wheelbase_mm","curb_weight_kg","basic_price_nis","safety_system_type","multimedia_system_type",
-        "screen_size","wheel_rim_size_max","wheel_rim_size_min","front_lighting_type","climate_control_system_type","rear_lighting_type",
-        "vehicle_warranty_years","battery_warranty_years","image_url"] 
+        allowed_columns = column_names
 
         # Restrict to the specified table
         if table_name and table_name != allowed_table:
@@ -110,13 +115,16 @@ class MasterAgent:
              {chat_leading_questions_doc.paragraphs}
              
             before making an sql query, always check the available column names in the table.
+            these are the columns names for use:
+            {clean_column_names.__str__()}
+            
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there are 4 constant values: מותג, דגם, קישור לתמונה, reason
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
             and the others can change depend on what you think the user is intrested in(in total 8 fields),
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop. 
-            only use the the next field names, and use them exactly as they are written here:
+            only use the the next field names, and use them exactly as they are written here when making the car suggestions:
             {database_column_names_hebrew}
             
             example of a response:
