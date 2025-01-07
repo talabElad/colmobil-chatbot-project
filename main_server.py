@@ -62,12 +62,15 @@ def handle_post_main_chat():
     if '|||' in response:
         car_suggestions_str_list = response.split('|||')[-1].split('|')
         for car_fields_str in car_suggestions_str_list:
-            car_fields_lst = car_fields_str.split(',')
-            car_fields_dict = {}
-            for car_field_and_val_str in car_fields_lst:
+            car_fields_lst_str = car_fields_str.split(',')
+            car_fields_list = []
+            for car_field_and_val_str in car_fields_lst_str:
+                car_fields_dict = {}
                 key_str, val_str = car_field_and_val_str.strip().split(':',1)
-                car_fields_dict[key_str] = val_str
-            car_suggestions_list.append(car_fields_dict)
+                car_fields_dict['field_name'] = key_str
+                car_fields_dict['field_value'] = val_str
+                car_fields_list.append(car_fields_dict)
+            car_suggestions_list.append(car_fields_list)
         print(car_suggestions_list)
     response_data = {"llm_response": response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)

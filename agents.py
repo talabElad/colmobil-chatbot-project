@@ -53,10 +53,6 @@ connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database
 # Create the SQLAlchemy engine
 engine = create_engine(connection_string)
 
-
-
-
-
 class CustomSQLDatabase(SQLDatabase):
     def get_table_info(self, table_name: str = None) -> str:
         """
@@ -88,9 +84,7 @@ class CustomSQLDatabase(SQLDatabase):
         return f"Table: {allowed_table}\n{filtered_columns_info}"
 
 
-
 db = CustomSQLDatabase(engine=engine)
-
 
 # Create SQLDatabaseToolkit with the database and the language model
 sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
@@ -109,14 +103,15 @@ class MasterAgent:
         manager_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", f"""
-             אתה סוכן חכם למכירת רכבים שעוזר ללקוחות למצוא את הרכב שהכי מתאים להם.
-             אתה מקצועי ונעים ומשתדל להמעיט במשפטים ארוכים.
+             אתה סוכן חכם למכירת רכבים שעוזר ללקוחות למצוא את הרכב החדש שהכי מתאים להם.
+             אתה מקצועי ונעים ומשתדל להמעיט במשפטים ארוכים מדי.
              תמיד תשתדל להציע 3 רכבים סופיים אלא אם בקשות המשתמש לא מאפשרות 3 רכבים, אלא רק פחות.
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
              {chat_leading_questions_doc.paragraphs}
              
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there are 4 constant values: מותג, דגם, קישור לתמונה, reason
+            in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
             and the others can change depend on what you think the user is intrested in(in total 8 fields),
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop. 
@@ -188,6 +183,7 @@ class MasterAgent:
         self.context_dict["input"]=input
         print(self.context_dict)
         self.response = self.agent_executor.invoke(self.context_dict)
+        print(self.response)
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
         # threading.Thread(target=self.update_context).start()
