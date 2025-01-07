@@ -18,7 +18,7 @@ def send_message():
         chat_log.config(state=tk.NORMAL)
         chat_log.insert(tk.END, f"אתה: {user_input}\n", 'rtl')
         
-        data = {'text_input': user_input, 'user_id': '1'}
+        data = {'text_input': user_input, 'user_id': '3'}
         
         response = requests.post(url, headers=headers, data=json.dumps(data))
 
