@@ -11,7 +11,7 @@ agent_executor = MasterAgent()
 load_dotenv(".env")
 from flask import Flask, request, jsonify
 import redis
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import redis
 
@@ -76,7 +76,15 @@ def handle_post_main_chat():
     llm_response = response.split('|||')[0]
     response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
-    return jsonify(response_data), 200
+    response = {}
+    response = make_response(jsonify(response_data),200)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST,OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Content-Type'] = 'application/json'
+    response.headers['Charset'] = 'UTF-8'
+            
+    return response
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5001)
