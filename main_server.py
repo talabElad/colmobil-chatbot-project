@@ -85,7 +85,7 @@ def handle_post_main_chat():
     response.headers['Charset'] = 'UTF-8'
             
     return response
-p
+
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5001)
     #print(check_for_groceries_options("סוגי השמנים שברשותי להציע הם: ||| 323:שמן זית,434:שמן קנולה,43:שמן חמניות"))
