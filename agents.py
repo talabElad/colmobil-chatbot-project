@@ -120,9 +120,9 @@ class MasterAgent:
             {clean_column_names.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
-            there are 4 constant values: מותג, דגם, קישור לתמונה, reason
+            there are 5 constant values: מותג, דגם, Image_URL, reason, car_web_link
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others can change depend on what you think the user is intrested in(in total 8 fields),
+            and the others can change depend on what you think the user is intrested in(in total 9 fields),
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
@@ -130,11 +130,11 @@ class MasterAgent:
             {database_column_names_hebrew}
             
             example of a response:
-            מצאתי את הרכבים שמתאימים לך ביותר, אתה כמובן יכול להמשיך להכווין אותי:
+            מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
             
-            ||| Image_URL:https://example.com/car1,,יצרן:Mazda,, דגם:CX-5,,מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice* |
-                Image_URL:https://example.com/car2,,יצרן:Mercedes,, דגם:GLC,,מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice* |
-                Image_URL:https://example.com/car3,,יצרן:Toyota,, דגם:Corolla,,מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice* |@|@|
+            ||| Image_URL:https://example.com/car1,,יצרן:Mazda,, דגם:CX-5,,מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
+                Image_URL:https://example.com/car2,,יצרן:Mercedes,, דגם:GLC,,מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
+                Image_URL:https://example.com/car3,,יצרן:Toyota,, דגם:Corolla,,מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |@|@|
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
