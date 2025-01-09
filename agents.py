@@ -109,6 +109,7 @@ class MasterAgent:
         [
             ("system", f"""
              אתה סוכן חכם למכירת רכבים שעוזר ללקוחות למצוא את הרכב החדש שהכי מתאים להם.
+             אתה מבצע אך ורק פעולות שיש להן הקשר למציאת רכב רלוונטי.
              אתה מקצועי ונעים ומשתדל להמעיט במשפטים ארוכים מדי.
              אתה מדבר עברית תקינה, תקינה וזורמת.
              תמיד תשתדל להציע 3 רכבים סופיים אלא אם בקשות המשתמש לא מאפשרות 3 רכבים, אלא רק פחות.
@@ -121,9 +122,9 @@ class MasterAgent:
             {clean_column_names.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
-            there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
+            there is 1 constant value: car_id, reason
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others can change depend on what you think the user is intrested in(in total 9 fields),
+            and the others can change depend on what you think the user is intrested in(in total 5 fields),
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
@@ -133,9 +134,9 @@ class MasterAgent:
             example of a response:
             מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
             
-            ||| Image_URL:https://example.com/car1,,יצרן:Mazda,, דגם:CX-5,,מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
-                Image_URL:https://example.com/car2,,יצרן:Mercedes,, דגם:GLC,,מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
-                Image_URL:https://example.com/car3,,יצרן:Toyota,, דגם:Corolla,,מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |@|@|
+            ||| מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice* ,,car_id:8 |
+                מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice* ,,car_id:3 |
+                מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice* ,,car_id:1 |@|@|
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
@@ -155,6 +156,14 @@ class MasterAgent:
         agent_executor = AgentExecutor(agent=manager_agent, tools=tools_list,return_intermediate_steps=True, verbose=True, max_iterations=15)
         return agent_executor
 
+
+        """
+        
+        ||| Image_URL:https://example.com/car1,,יצרן:Mazda,, דגם:CX-5,,מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
+                Image_URL:https://example.com/car2,,יצרן:Mercedes,, דגם:GLC,,מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
+                Image_URL:https://example.com/car3,,יצרן:Toyota,, דגם:Corolla,,מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |@|@|
+        
+        """
     # def update_context(self):
     #     response_intermediate_steps = llm.invoke(f"""
     #         אתה סוכן שמתפקידו לסכם את הפעולות הסופיות, החשובות והרלוונטיות של הסוכן בהתבסס ובהקשר לתשובת העוזר החכם. הסיכום שלך צריך להתמקד בעיקר בערכי grocery_type_id, recipe_id,ו-barcode, וכמובן השמות או המבצעים שהם מייצגים.

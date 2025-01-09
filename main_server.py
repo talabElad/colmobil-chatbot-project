@@ -3,11 +3,10 @@ import os
 from dotenv import load_dotenv, dotenv_values
 import numpy as np
 from pydantic import __init__
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import json
 import numpy as np
 from agents import MasterAgent
-agent_executor = MasterAgent()
 load_dotenv(".env")
 from flask import Flask, request, jsonify
 import redis
@@ -18,13 +17,26 @@ import redis
 agent_executor = MasterAgent()
 
 app = Flask(__name__)
-redis_conn = redis.Redis(host='localhost', port=6379, db=0)
 
 # @app.before_request
 # def ensure_utf8():
 #     request.data.decode('utf-8')
 
 # Define a route for POST requests
+
+endpoint="database-colmobil.c9owiq2sebpi.us-east-1.rds.amazonaws.com"
+username="admin"
+password="Bb123456!"
+database="databasecolmobil"
+
+# Create a SQLDatabase object
+connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
+
+# Create the SQLAlchemy engine
+engine = create_engine(connection_string)
+
+sql_conn = engine.connect()
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -60,6 +72,7 @@ def handle_post_main_chat():
     response = agent_executor.custom_invoke(data['text_input'], data['user_id'])
     car_suggestions_list = []
     if '|||' in response:
+        car_ids_list = []
         car_suggestions_str_list = response.split('|||')[-1].split('|')
         for car_fields_str in car_suggestions_str_list:
             car_fields_lst_str = car_fields_str.split(',,')
@@ -69,10 +82,21 @@ def handle_post_main_chat():
                 print("car_field_and_val_str: ",car_field_and_val_str)
                 key_str, val_str = car_field_and_val_str.strip().split(':',1)
                 car_fields_dict['field_name'] = key_str
+                if "car_id" == key_str:
+                    car_ids_list.append(val_str)
                 car_fields_dict['field_value'] = val_str
                 car_fields_list.append(car_fields_dict)
             car_suggestions_list.append(car_fields_list)
         print(car_suggestions_list)
+        
+        query = sql_conn.execute(text("SELECT * FROM your_table_name"))
+        
+        
+        for car_suggestion in car_suggestions_list:
+            for car_field in car_suggestion:
+                if car_field["field_name"] == "car_id":
+                    
+        
     llm_response = response.split('|||')[0]
     response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
