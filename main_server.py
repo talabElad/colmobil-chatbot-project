@@ -80,7 +80,7 @@ def handle_post_main_chat():
     response = make_response(jsonify(response_data),200)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'POST,OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Charset'
     response.headers['Content-Type'] = 'application/json'
     response.headers['Charset'] = 'UTF-8'
             
