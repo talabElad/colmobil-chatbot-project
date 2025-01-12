@@ -57,12 +57,12 @@ database="databasecolmobil"
 # )
 
 
-# os.environ["OPENAI_API_TYPE"]="azure"
-# os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
-# os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
-# os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
-# os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
-# os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
+os.environ["OPENAI_API_TYPE"]="azure"
+os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
+os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
+os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
+os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
+os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
 
 
 llm = AzureChatOpenAI(
