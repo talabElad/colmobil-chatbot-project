@@ -40,13 +40,13 @@ username="admin"
 password="Bb123456!"
 database="databasecolmobil"
 
-# llm = ChatBedrockConverse(
-#     model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-#     temperature=0,
-#     region_name="us-east-1",
-#     provider="anthropic",
-#     stop_sequences = ["|@|@|"]
-# )
+llm = ChatBedrockConverse(
+    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    temperature=0,
+    region_name="us-east-1",
+    provider="anthropic",
+    stop_sequences = ["|@|@|"]
+)
 
 # llm = ChatBedrockConverse(
 #     model="amazon.nova-pro-v1:0",
@@ -57,19 +57,19 @@ database="databasecolmobil"
 # )
 
 
-os.environ["OPENAI_API_TYPE"]="azure"
-os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
-os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
-os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
-os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4"
-os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="saharGTP4"
+# os.environ["OPENAI_API_TYPE"]="azure"
+# os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
+# os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
+# os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
+# os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
+# os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
 
 
-llm = AzureChatOpenAI(
-    api_version="2024-05-01-preview",
-    azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
-    temperature=0,stop_sequences=["|@|@|"]
-    )
+# llm = AzureChatOpenAI(
+#     api_version="2024-05-01-preview",
+#     azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
+#     temperature=0,stop_sequences=["|@|@|"]
+#     )
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
@@ -165,7 +165,6 @@ class MasterAgent:
              אתה מציע רכבים אך ורק מתוך הדאטאבייס הפנימי של כלמוביל, אתה לא ממציא דגמים שלא קיימים בדאטאבייס הSQL.
              אתה מקצועי ונעים ומשתדל להמעיט במשפטים ארוכים מדי.
              אתה מדבר עברית תקינה, תקינה וזורמת.
-             שדות יכולים להיות בעברית או באנגלית, תרשום אותם איך שהתבקשת.
              תיהיה מנומס נעים ותקשורתי וקצת מצחיק לפעמים.
              תמיד תשתדל להציע 3 רכבים סופיים אלא אם בקשות המשתמש לא מאפשרות 3 רכבים, אלא רק פחות, וזה בסדר אם אין לך רכבים להציע שעונים על הדרישות.
              במידת הצורך אתה יודע "להגדיל ראש" לפי הצרכים של הלקוח, דוגמה לקוח מציין שיש לו 4 ילדים ולכן אתה תנסה להתחשב במספר המושבים ברכב שאתה מציע, 
@@ -186,8 +185,7 @@ class MasterAgent:
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
-            only use the the next field names, and use them exactly as they are written here when making the car suggestions, use 3 of them as the 3 additional dynamic fields in the response, 
-            not including the constant fields:
+            only use the the next field names, and use them exactly as they are written here when making the car suggestions:
             {database_column_names_hebrew}
             every value you return has to be from the colmobil data base(sql), you do not offer a car or info that isnt existing in the internal db.
             if you dont have a desired car or features in the db, you can say it smoothly and in a way a sales man would say.
@@ -261,14 +259,14 @@ class MasterAgent:
         self.response = self.agent_executor.invoke(self.context_dict)
         print(self.response)
         self.conv.append({"role": "user", "content":input})
-        self.conv.append({"role": "assistant", "content":self.response['output']})
+        self.conv.append({"role": "assistant", "content":self.response['output'][0]["text"]})
         self.context_dict["chat_history"] = self.conv
         self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
         self.r.expire(self.user_id+':' + 'context_dict', 172800)
         self.r.hset(self.user_id, 'conv', json.dumps(self.conv)) 
         self.r.expire(self.user_id+':' + 'conv', 172800)
         # threading.Thread(target=self.update_context).start()
-        return self.response['output']
+        return self.response['output'][0]["text"]
     
     def initialize_conversation(self):
         print("1")
