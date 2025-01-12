@@ -23,6 +23,8 @@ from tools import search_additional_descriptions, search_models
 from docx import Document
 import redis
 from langchain_aws import ChatBedrockConverse
+from langchain_openai import AzureChatOpenAI
+
 
 
 load_dotenv(".env")
@@ -46,13 +48,27 @@ database="databasecolmobil"
 #     stop_sequences = ["|@|@|"]
 # )
 
-llm = ChatBedrockConverse(
-    model="amazon.nova-pro-v1:0",
-    temperature=0,
-    region_name="us-east-1",
-    provider="amazon",
-    stop_sequences = ["|@|@|"]
-)
+# llm = ChatBedrockConverse(
+#     model="amazon.nova-pro-v1:0",
+#     temperature=0,
+#     region_name="us-east-1",
+#     provider="amazon",
+#     stop_sequences = ["|@|@|"]
+# )
+
+
+# os.environ["OPENAI_API_TYPE"]="azure"
+# os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
+# os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
+# os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
+# os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
+# os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
+
+
+llm = AzureChatOpenAI(
+    api_version="2024-05-01-preview",
+    azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
+    temperature=0)
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
