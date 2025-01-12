@@ -222,7 +222,7 @@ class MasterAgent:
         self.response = self.agent_executor.invoke(self.context_dict)
         print(self.response)
         self.conv.append({"role": "user", "content":input})
-        self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
+        self.conv.append({"role": "assistant", "content":self.response['output']})
         # threading.Thread(target=self.update_context).start()
         return self.response['output'][0]['text']
     
