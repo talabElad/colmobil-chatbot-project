@@ -181,7 +181,7 @@ class MasterAgent:
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 6 constant value: מותג, דגם, Image_URL, reason, car_web_link, מחיר בסיסי (₪) .
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others values can change depend on what you think the user is interested in, which means 6 contant fields and 4 dynamic changing fields, not including the constant fields, (10 total fields).
+            and the others values can change depend on what you think the user is interested in, which means 6 contant fields and 4 dynamic changing fields, not including the constant fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
