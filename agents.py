@@ -232,8 +232,8 @@ class MasterAgent:
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
         self.context_dict["chat_history"] = self.conv
-        self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
-        self.r.hset(self.user_id, 'conv', json.dumps(self.conv))
+        self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict), ex=172800) 
+        self.r.hset(self.user_id, 'conv', json.dumps(self.conv), ex=172800) 
         # threading.Thread(target=self.update_context).start()
         return self.response['output'][0]['text']
     
@@ -246,7 +246,6 @@ class MasterAgent:
         else:
             self.context_dict = {"input":"","chat_history":[],"context_info":""}
             self.conv=[]
-            self.r.hset(self.user_id, 'basket_dict',json.dumps({}))
         print("2")
         
         
