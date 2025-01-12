@@ -40,13 +40,13 @@ username="admin"
 password="Bb123456!"
 database="databasecolmobil"
 
-llm = ChatBedrockConverse(
-    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-    temperature=0,
-    region_name="us-east-1",
-    provider="anthropic",
-    stop_sequences = ["|@|@|"]
-)
+# llm = ChatBedrockConverse(
+#     model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+#     temperature=0,
+#     region_name="us-east-1",
+#     provider="anthropic",
+#     stop_sequences = ["|@|@|"]
+# )
 
 # llm = ChatBedrockConverse(
 #     model="amazon.nova-pro-v1:0",
@@ -57,19 +57,19 @@ llm = ChatBedrockConverse(
 # )
 
 
-# os.environ["OPENAI_API_TYPE"]="azure"
-# os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
-# os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
-# os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
-# os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
-# os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
+os.environ["OPENAI_API_TYPE"]="azure"
+os.environ["OPENAI_API_VERSION"]="2024-02-15-preview"
+os.environ["AZURE_OPENAI_ENDPOINT"]="https://openaiimagetext.openai.azure.com/" # Your Azure OpenAI resource endpoint
+os.environ["OPENAI_API_KEY"]="212f3a6ba66d409c8219de169aefec1a" # Your Azure OpenAI resource key
+os.environ["AZURE_OPENAI_GPT4O_MODEL_NAME"]="gpt-4o"
+os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
 
 
-# llm = AzureChatOpenAI(
-#     api_version="2024-05-01-preview",
-#     azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
-#     temperature=0,stop_sequences=["|@|@|"]
-#     )
+llm = AzureChatOpenAI(
+    api_version="2024-05-01-preview",
+    azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
+    temperature=0,stop_sequences=["|@|@|"]
+    )
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
