@@ -38,14 +38,21 @@ username="admin"
 password="Bb123456!"
 database="databasecolmobil"
 
+# llm = ChatBedrockConverse(
+#     model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+#     temperature=0,
+#     region_name="us-east-1",
+#     provider="anthropic",
+#     stop_sequences = ["|@|@|"]
+# )
+
 llm = ChatBedrockConverse(
-    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    model="amazon.nova-pro-v1:0",
     temperature=0,
     region_name="us-east-1",
-    provider="anthropic",
+    provider="amazon",
     stop_sequences = ["|@|@|"]
 )
-
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
@@ -63,6 +70,7 @@ clean_column_names = []
 for column_name in column_names:
     if not "embeddings" in column_name:
         clean_column_names.append(column_name)
+
 print('Columns: , ')
 
 class CustomSQLDatabase(SQLDatabase):
