@@ -80,15 +80,38 @@ engine = create_engine(connection_string)
 # Use SQLAlchemy MetaData to reflect the database schema
 inspector = inspect(engine)
 
+
+
+
+
 # Get column names for the 'cars_collection' table
 columns = inspector.get_columns('cars_collection')
-column_names = [column['name'] for column in columns]
-clean_column_names = []
-for column_name in column_names:
-    if not "embeddings" in column_name:
-        clean_column_names.append(column_name)
 
-print('Columns: , ')
+
+column_details = []
+for column in columns:
+    name = column['name']
+    if "embeddings" in name:
+        continue
+    data_type = column['type']
+    if str(data_type) == 'ENUM':
+        enum_values = data_type.enums  # Enum values if applicable (returns None if not an enum)
+        column_details.append({
+        "name": name,
+        "data_type": str(data_type),  # Convert to string for better readability
+        "enum_values": enum_values if enum_values else "N/A"  # Handle non-enum columns
+        })
+        continue
+    
+    column_details.append({
+        "name": name,
+        "data_type": str(data_type),  # Convert to string for better readability
+        })  
+
+print("hi")
+
+
+column_names = [column['name'] for column in column_details]
 
 class CustomSQLDatabase(SQLDatabase):
     def get_table_info(self, column_names, table_name: str = None) -> str:
@@ -148,7 +171,7 @@ class MasterAgent:
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
-            {clean_column_names.__str__()}
+            {column_details.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
