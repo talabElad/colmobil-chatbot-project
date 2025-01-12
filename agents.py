@@ -145,6 +145,7 @@ class MasterAgent:
              
             before making an sql query, always check the available column names in the table.
             before making an sql query, always limit the numbers of results.
+            when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
             {clean_column_names.__str__()}
             
