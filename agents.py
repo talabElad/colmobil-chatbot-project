@@ -190,7 +190,7 @@ class MasterAgent:
             every value you return has to be from the colmobil data base(sql), you do not offer a car or info that isnt existing in the internal db.
             if you dont have a desired car or features in the db, you can say it smoothly and in a way a sales man would say.
             never offer a model or a car you dont have in the sql db.
-            before offering the cars, you have to validate that the cars/models exists in the sql db.
+            you have to validate that the cars/models/fields/values exists in the sql db, before offering the cars.
             
             the values in the example are just examples, you need to find the real values in the internal db, example of a response:
             מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
