@@ -89,11 +89,13 @@ columns = inspector.get_columns('cars_collection')
 
 
 column_details = []
+column_details_lines = []
 for column in columns:
     name = column['name']
     if "embeddings" in name:
         continue
     data_type = column['type']
+    enum_values = "N/A"
     if str(data_type) == 'ENUM':
         enum_values = data_type.enums  # Enum values if applicable (returns None if not an enum)
         column_details.append({
@@ -101,12 +103,15 @@ for column in columns:
         "data_type": str(data_type),  # Convert to string for better readability
         "enum_values": enum_values if enum_values else "N/A"  # Handle non-enum columns
         })
+        column_details_lines.append(f" - Column: {name}, Type: {data_type}, Enum Values: {enum_values}")
         continue
     
     column_details.append({
         "name": name,
         "data_type": str(data_type),  # Convert to string for better readability
         })  
+        
+    column_details_lines.append(f" - Column: {name}, Type: {data_type}")
 
 print("hi")
 
@@ -145,11 +150,6 @@ sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 chat_leading_questions_doc = Document("leading_questions.docx")
 
 database_column_names_hebrew = Document("database_column_names_hebrew.docx")
-print({column_details.__str__()})
-print("hi")
-
-#            {chat_leading_questions_doc.paragraphs}
-##            {column_details.__str__()}
 
 class MasterAgent:
     def __init__(self):
@@ -176,7 +176,7 @@ class MasterAgent:
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
-            {column_details.__str__()}
+            {column_details_lines.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
