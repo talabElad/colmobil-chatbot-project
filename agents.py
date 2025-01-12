@@ -176,6 +176,7 @@ class MasterAgent:
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
+            {column_details.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
