@@ -147,6 +147,10 @@ chat_leading_questions_doc = Document("leading_questions.docx")
 database_column_names_hebrew = Document("database_column_names_hebrew.docx")
 print({column_details.__str__()})
 print("hi")
+
+#            {chat_leading_questions_doc.paragraphs}
+##            {column_details.__str__()}
+
 class MasterAgent:
     def __init__(self):
         self.r = redis.Redis(host='localhost', port=6379, db=0)
@@ -166,13 +170,12 @@ class MasterAgent:
              במידת הצורך אתה יודע "להגדיל ראש" לפי הצרכים של הלקוח, דוגמה לקוח מציין שיש לו 4 ילדים ולכן אתה תנסה להתחשב במספר המושבים ברכב שאתה מציע, 
              משום שאתה מחפש את הרכב שהיא יתאים ללקוח.
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
-             {chat_leading_questions_doc.paragraphs}
+ 
              
             before making an sql query, always check the available column names in the table.
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
-            {column_details.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
@@ -255,9 +258,9 @@ class MasterAgent:
         print(self.response)
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
-        # self.context_dict["chat_history"] = self.conv
-        # self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
-        # self.r.expire(self.user_id+':' + 'context_dict', 172800)
+        self.context_dict["chat_history"] = self.conv
+        self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
+        self.r.expire(self.user_id+':' + 'context_dict', 172800)
         self.r.hset(self.user_id, 'conv', json.dumps(self.conv)) 
         self.r.expire(self.user_id+':' + 'conv', 172800)
         # threading.Thread(target=self.update_context).start()
