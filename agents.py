@@ -68,7 +68,8 @@ os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
 llm = AzureChatOpenAI(
     api_version="2024-05-01-preview",
     azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
-    temperature=0)
+    temperature=0,stop_sequences=["|@|@|"]
+    )
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
