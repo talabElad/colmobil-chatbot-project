@@ -224,7 +224,7 @@ class MasterAgent:
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output']})
         # threading.Thread(target=self.update_context).start()
-        return self.response['output'][0]['text']
+        return self.response['output']
     
     def initialize_conversation(self):
         print("1")
