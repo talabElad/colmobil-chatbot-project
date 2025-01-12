@@ -145,7 +145,8 @@ sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 chat_leading_questions_doc = Document("leading_questions.docx")
 
 database_column_names_hebrew = Document("database_column_names_hebrew.docx")
-#{column_details.__str__()}
+print({column_details.__str__()})
+print("hi")
 class MasterAgent:
     def __init__(self):
         self.r = redis.Redis(host='localhost', port=6379, db=0)
@@ -171,7 +172,7 @@ class MasterAgent:
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
             these are the columns names for use:
-            
+            {column_details.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
             there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
@@ -254,9 +255,9 @@ class MasterAgent:
         print(self.response)
         self.conv.append({"role": "user", "content":input})
         self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
-        self.context_dict["chat_history"] = self.conv
-        self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
-        self.r.expire(self.user_id+':' + 'context_dict', 172800)
+        # self.context_dict["chat_history"] = self.conv
+        # self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict)) 
+        # self.r.expire(self.user_id+':' + 'context_dict', 172800)
         self.r.hset(self.user_id, 'conv', json.dumps(self.conv)) 
         self.r.expire(self.user_id+':' + 'conv', 172800)
         # threading.Thread(target=self.update_context).start()
