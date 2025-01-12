@@ -170,7 +170,7 @@ class MasterAgent:
              במידת הצורך אתה יודע "להגדיל ראש" לפי הצרכים של הלקוח, דוגמה לקוח מציין שיש לו 4 ילדים ולכן אתה תנסה להתחשב במספר המושבים ברכב שאתה מציע, 
              משום שאתה מחפש את הרכב שהיא יתאים ללקוח.
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
- 
+            {chat_leading_questions_doc.paragraphs}
              
             before making an sql query, always check the available column names in the table.
             before making an sql query, always limit the numbers of results.
