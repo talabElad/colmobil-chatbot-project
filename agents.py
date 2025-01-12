@@ -179,9 +179,9 @@ class MasterAgent:
             {column_details_lines.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
-            there is 1 constant value: מותג, דגם, Image_URL, reason, car_web_link
+            there is 6 constant value: מותג, דגם, Image_URL, reason, car_web_link, מחיר בסיסי (₪) .
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others values can change depend on what you think the user is interested in(in total 9 fields),
+            and the others values can change depend on what you think the user is interested in, which means 6 contant fields and 4 dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
@@ -189,7 +189,7 @@ class MasterAgent:
             {database_column_names_hebrew}
             every value you return has to be from the colmobil data base(sql), you do not add car or info that isnt existing in the internal db.
             if you dont have a desired car or features in the db, you can say it smoothly and in a way a sales man would say.
-            
+            ד
             
             the values in the example are just examples, you nned to fins the real values in the internal db, example of a response:
             מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
