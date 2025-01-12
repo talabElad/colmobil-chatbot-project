@@ -233,7 +233,9 @@ class MasterAgent:
         self.conv.append({"role": "assistant", "content":self.response['output'][0]['text']})
         self.context_dict["chat_history"] = self.conv
         self.r.hset(self.user_id, 'context_dict',json.dumps(self.context_dict), ex=172800) 
+        self.r.expire(self.user_id+':' + 'context_dict', 172800)
         self.r.hset(self.user_id, 'conv', json.dumps(self.conv), ex=172800) 
+        self.r.expire(self.user_id+':' + 'conv', 172800)
         # threading.Thread(target=self.update_context).start()
         return self.response['output'][0]['text']
     
