@@ -144,6 +144,7 @@ class MasterAgent:
              {chat_leading_questions_doc.paragraphs}
              
             before making an sql query, always check the available column names in the table.
+            before making an sql query, always limit the numbers of results.
             these are the columns names for use:
             {clean_column_names.__str__()}
             
