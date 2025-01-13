@@ -83,13 +83,15 @@ inspector = inspect(engine)
 # Get column names for the 'cars_collection' table
 columns = inspector.get_columns('cars_collection')
 
-
+clean_columns_dynamic_fields = []
 column_details = []
 column_details_lines = []
 for column in columns:
     name = column['name']
     if "embeddings" in name:
         continue
+    if not name in ["model","car_id","reason","car_web_link","image_url","brand"]:
+        clean_columns_dynamic_fields.append(name)
     data_type = column['type']
     enum_values = "N/A"
     if str(data_type) == 'ENUM':
@@ -179,7 +181,9 @@ class MasterAgent:
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
             and the others values can change depend on what you think the user is interested in, which means 2 contant fields and 3 dynamic changing fields,
             that are different from the constant fields(car_id, reason).
-            do not send brand, model, image_url, car_web_link in the response.
+            dynamic fields comes only from the next list of field names:
+            {clean_columns_dynamic_fields.__str__()}
+            
             3 dynamic changing fields, comes without value, just to know what the relevant fields are, use ++ to seperate between the constant fields and values and the dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
