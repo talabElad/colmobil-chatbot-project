@@ -134,7 +134,7 @@ def handle_post_main_chat():
                 car_fields_dict['field_value'] = dynamic_value
                 car_fields_list.append(car_fields_dict)
                 
-        car_suggestions_list.append(car_fields_list)
+            car_suggestions_list.append(car_fields_list)
         print(car_suggestions_list)
         
         
@@ -150,8 +150,10 @@ def handle_post_main_chat():
         #         car_fields_list.append(car_fields_dict)
         #     car_suggestions_list.append(car_fields_list)
         # print(car_suggestions_list)
+    # llm_response = response.split('|||')[0]
+    # response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     llm_response = response.split('|||')[0]
-    response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
+    response_data = {"llm_response": response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
     response = {}
     response = make_response(jsonify(response_data),200)
