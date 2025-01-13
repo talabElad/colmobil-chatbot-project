@@ -39,10 +39,7 @@ version = cursor.fetchone()
 # Define a route for POST requests
 
 CORS(app)  # Enable CORS for all routes
-
-
-
-
+dict_english_hebrew_columns = json.loads("dict_english_hebrew.json")
 
 # Define a route for POST requests
 @app.route('/main_chat', methods=['POST'])
@@ -98,7 +95,7 @@ def handle_post_main_chat():
             print(constant_fields)
             print(dynamic_fields)
             sql_query = f"""
-                SELECT brand, model, image_url, car_web_link, {', '.join(dynamic_fields_keys_list)}
+                SELECT brand, model, image_url, car_web_link, basic_price_nis,  {', '.join(dynamic_fields_keys_list)}
                 FROM cars_collection
                 WHERE car_id = {car_id}
                 LIMIT 1;"""
@@ -107,13 +104,13 @@ def handle_post_main_chat():
 
             results = cursor.fetchone()
 
-            brand, model, image_url, car_web_link, *dynamic_fields_values = results
+            brand, model, image_url, car_web_link, basic_price_nis, *dynamic_fields_values = results
             car_fields_dict = {}
-            car_fields_dict['field_name'] = "brand"
+            car_fields_dict['field_name'] = dict_english_hebrew_columns["brand"]
             car_fields_dict['field_value'] = brand
             car_fields_list.append(car_fields_dict)
             car_fields_dict = {}
-            car_fields_dict['field_name'] = "model"
+            car_fields_dict['field_name'] = dict_english_hebrew_columns["model"]
             car_fields_dict['field_value'] = model
             car_fields_list.append(car_fields_dict)
             car_fields_dict = {}
@@ -127,10 +124,13 @@ def handle_post_main_chat():
             car_fields_dict['field_name'] = "reason"
             car_fields_dict['field_value'] = reason
             car_fields_list.append(car_fields_dict)
+            car_fields_dict['field_name'] = "basic_price_nis"
+            car_fields_dict['field_value'] = basic_price_nis
+            car_fields_list.append(car_fields_dict)
             
             for dynamic_key, dynamic_value in zip(dynamic_fields_keys_list, dynamic_fields_values):
                 car_fields_dict = {}
-                car_fields_dict['field_name'] = dynamic_key
+                car_fields_dict['field_name'] = dict_english_hebrew_columns[dynamic_key]
                 car_fields_dict['field_value'] = dynamic_value
                 car_fields_list.append(car_fields_dict)
                 
