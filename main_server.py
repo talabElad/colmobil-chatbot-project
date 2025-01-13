@@ -39,8 +39,9 @@ version = cursor.fetchone()
 # Define a route for POST requests
 
 CORS(app)  # Enable CORS for all routes
-dict_english_hebrew_columns = json.loads("dict_english_hebrew.json")
 
+with open('dict_english_hebrew.json', 'r') as file:
+    dict_english_hebrew_columns = json.load(file)
 # Define a route for POST requests
 @app.route('/main_chat', methods=['POST'])
 def handle_post_main_chat():
