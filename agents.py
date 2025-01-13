@@ -40,13 +40,13 @@ username="admin"
 password="Bb123456!"
 database="databasecolmobil"
 
-llm = ChatBedrockConverse(
-    model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-    temperature=0,
-    region_name="us-east-1",
-    provider="anthropic",
-    stop_sequences = ["|@|@|"]
-)
+# llm = ChatBedrockConverse(
+#     model="us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+#     temperature=0,
+#     region_name="us-east-1",
+#     provider="anthropic",
+#     stop_sequences = ["|@|@|"]
+# )
 
 # llm = ChatBedrockConverse(
 #     model="amazon.nova-pro-v1:0",
@@ -65,11 +65,11 @@ llm = ChatBedrockConverse(
 # os.environ["AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"]="sahargpt4o"
 
 
-# llm = AzureChatOpenAI(
-#     api_version="2024-05-01-preview",
-#     azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
-#     temperature=0,stop_sequences=["|@|@|"]
-#     )
+llm = AzureChatOpenAI(
+    api_version="2024-05-01-preview",
+    azure_deployment=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT_NAME"),
+    temperature=0,stop_sequences=["|@|@|"]
+    )
 
 # Create a SQLDatabase object
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
@@ -171,7 +171,7 @@ class MasterAgent:
              משום שאתה מחפש את הרכב שהכי יתאים ללקוח.
              במידה ומשתמש רוצה רכב אבל אין לך מספיק מידע בשביל לפלטר לו 3 רכבים אז תשתמש בשאלות המנחות הבאות או חלקן:
             {chat_leading_questions_doc.paragraphs}
-             
+            
             before making an sql query, always check the available column names in the table.
             before making an sql query, always limit the numbers of results.
             when you are making a query, never choose the '*' option, always choose the columns names you want to use.
@@ -179,9 +179,10 @@ class MasterAgent:
             {column_details_lines.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
-            there is 6 constant value: מותג, דגם, Image_URL, reason, car_web_link, מחיר בסיסי (₪) .
+            there is 6 constant value: car_id, reason.
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others values can change depend on what you think the user is interested in, which means 6 contant fields and 3 dynamic changing fields, not including the constant fields.
+            and the others values can change depend on what you think the user is interested in, which means 2 contant fields and 3 dynamic changing fields, not including the constant fields.
+            3 dynamic changing fields, comes without value, just to know what the relevant fields are, use ++ to seperate between the constant fields and values and the dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
@@ -195,9 +196,9 @@ class MasterAgent:
             the values in the example are just examples, you need to find the real values in the internal db, example of a response:
             מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
             
-            ||| Image_URL:https://example.com/car1,,יצרן:Mazda,, דגם:CX-5,,מספר דלתות:4,, נפח תא מטען (ליטר):500,, מחיר בסיסי (₪):120000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
-                Image_URL:https://example.com/car2,,יצרן:Mercedes,, דגם:GLC,,מספר דלתות:5,, נפח תא מטען (ליטר):550,, מחיר בסיסי (₪):250000,, מערכת בטיחות:Advanced,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |
-                Image_URL:https://example.com/car3,,יצרן:Toyota,, דגם:Corolla,,מספר דלתות:4,, נפח תא מטען (ליטר):470,, מחיר בסיסי (₪):95000,, מערכת בטיחות:Basic,,reason:*give 1 line of reason for this car choice*,,car_web_link:*link to the car web page* |@|@|
+            ||| car_id:3 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |
+                car_id:16 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |
+                car_id:7 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |@|@|
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),

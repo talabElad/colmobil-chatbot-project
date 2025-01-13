@@ -9,13 +9,10 @@ import numpy as np
 from agents import MasterAgent
 agent_executor = MasterAgent()
 load_dotenv(".env")
-from flask import Flask, request, jsonify
-import redis
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import redis
 
-agent_executor = MasterAgent()
 
 app = Flask(__name__)
 redis_conn = redis.Redis(host='localhost', port=6379, db=0)
@@ -24,10 +21,28 @@ redis_conn = redis.Redis(host='localhost', port=6379, db=0)
 # def ensure_utf8():
 #     request.data.decode('utf-8')
 
+endpoint="database-colmobil.c9owiq2sebpi.us-east-1.rds.amazonaws.com"
+username="admin"
+password="Bb123456!"
+database="databasecolmobil"
+
+
+connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
+
+engine = create_engine(connection_string)
+
+connection = engine.connect()
+raw_connection = connection.connection
+cursor = raw_connection.cursor()
+cursor.execute("SELECT VERSION()")
+version = cursor.fetchone()
 # Define a route for POST requests
 
-app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+
+
+
 
 # Define a route for POST requests
 @app.route('/main_chat', methods=['POST'])
@@ -57,22 +72,79 @@ def handle_post_main_chat():
         return jsonify({"error": "Invalid JSON"}), 400
     
     print(f"Parsed data: {data}")
+    table_name = "cars_collection"
     response = agent_executor.custom_invoke(data['text_input'], data['user_id'])
     car_suggestions_list = []
     if '|||' in response:
         car_suggestions_str_list = response.split('|||')[-1].split('|')
         for car_fields_str in car_suggestions_str_list:
-            car_fields_lst_str = car_fields_str.split(',,')
             car_fields_list = []
-            for car_field_and_val_str in car_fields_lst_str:
+            dynamic_fields_keys_list = []
+            car_fields = car_fields_str.split('++')
+            constant_fields = car_fields[0].split(',,')
+            dynamic_fields = car_fields[0].split(',,')
+            for constant_field in constant_fields:
+                key_clean = constant_field.split(':')[0].strip()
+                value_clean = constant_field.split(':')[1].strip()
+                
+                if key_clean == 'car_id':
+                    car_id = value_clean
+                if key_clean == 'reason':
+                    reason = value_clean
+            for dynamic_field in dynamic_fields:
+                key_clean = dynamic_field.strip()
+                value_clean = dynamic_field.split(':')[1].strip()
+                dynamic_fields_keys_list.append(key_clean)            
+        
+
+            cursor.execute(f"""
+                SELECT brand, model, image_url, car_web_link, {', '.join(dynamic_fields_keys_list)}
+                FROM cars_collection
+                WHERE car_id = {car_id}
+                LIMIT 1;""")
+
+            results = cursor.fetchone()
+
+            brand, model, image_url, car_web_link, *dynamic_fields_values = results
+            car_fields_dict = {}
+            car_fields_dict['field_name'] = "brand"
+            car_fields_dict['field_value'] = brand
+            car_fields_list.append(car_fields_dict)
+            car_fields_dict = {}
+            car_fields_dict['field_name'] = "model"
+            car_fields_dict['field_value'] = model
+            car_fields_list.append(car_fields_dict)
+            car_fields_dict = {}
+            car_fields_dict['field_name'] = "image_url"
+            car_fields_dict['field_value'] = image_url
+            car_fields_list.append(car_fields_dict)
+            car_fields_dict = {}
+            car_fields_dict['field_name'] = "car_web_link"
+            car_fields_dict['field_value'] = car_web_link
+            car_fields_list.append(car_fields_dict)
+            
+            for dynamic_key, dynamic_value in zip(dynamic_fields_keys_list, dynamic_fields_values):
                 car_fields_dict = {}
-                print("car_field_and_val_str: ",car_field_and_val_str)
-                key_str, val_str = car_field_and_val_str.strip().split(':',1)
-                car_fields_dict['field_name'] = key_str
-                car_fields_dict['field_value'] = val_str
+                car_fields_dict['field_name'] = dynamic_key
+                car_fields_dict['field_value'] = dynamic_value
                 car_fields_list.append(car_fields_dict)
-            car_suggestions_list.append(car_fields_list)
+                
+        car_suggestions_list.append(car_fields_list)
         print(car_suggestions_list)
+        
+        
+        # for car_fields_str in car_suggestions_str_list:
+        #     car_fields_lst_str = car_fields_str.split(',,')
+        #     car_fields_list = []
+        #     for car_field_and_val_str in car_fields_lst_str:
+        #         car_fields_dict = {}
+        #         print("car_field_and_val_str: ",car_field_and_val_str)
+        #         key_str, val_str = car_field_and_val_str.strip().split(':',1)
+        #         car_fields_dict['field_name'] = key_str
+        #         car_fields_dict['field_value'] = val_str
+        #         car_fields_list.append(car_fields_dict)
+        #     car_suggestions_list.append(car_fields_list)
+        # print(car_suggestions_list)
     llm_response = response.split('|||')[0]
     response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
