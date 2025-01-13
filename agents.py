@@ -200,13 +200,13 @@ class MasterAgent:
                     car_id:16 ,, reason:סיבה קצרה ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
                     car_id:7 ,, reason:סיבה קצרה ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |@|@|
 
-                    דגשים נוספים:
+            דגשים נוספים:
 
-                    הצע רק רכבים, דגמים ומידע שקיימים בדאטאבייס הפנימי של כלמוביל.
-                    אם לא מצאת רכבים מתאימים, הסבר זאת בצורה נעימה ומקצועית, מבלי להמציא הצעות שאינן קיימות.
-                    ודא שכל הדגמים, הערכים והנתונים שאתה מציע אכן מאומתים בדאטאבייס.
-                    תגוון במשפט הפתיחה של התשובה ובנימוקים בשדה reason.
-                    do not use car_web_link, image_url, brand, model, basic_price_nis, additional_description in the response.
+            הצע רק רכבים, דגמים ומידע שקיימים בדאטאבייס הפנימי של כלמוביל.
+            אם לא מצאת רכבים מתאימים, הסבר זאת בצורה נעימה ומקצועית, מבלי להמציא הצעות שאינן קיימות.
+            ודא שכל הדגמים, הערכים והנתונים שאתה מציע אכן מאומתים בדאטאבייס.
+            תגוון במשפט הפתיחה של התשובה ובנימוקים בשדה reason.
+            do not use car_web_link, image_url, brand, model, basic_price_nis, additional_description in the response.
                                 """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
