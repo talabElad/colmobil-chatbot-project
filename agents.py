@@ -186,8 +186,6 @@ class MasterAgent:
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
             seperate the fields and values with double comma.
-            only use the the next field names, and use them exactly as they are written here when making the car suggestions:
-            {database_column_names_hebrew}
             every value you return has to be from the colmobil data base(sql), you do not offer a car or info that isnt existing in the internal db.
             if you dont have a desired car or features in the db, you can say it smoothly and in a way a sales man would say.
             never offer a model or a car you dont have in the sql db.
@@ -196,9 +194,9 @@ class MasterAgent:
             the values in the example are just examples, you need to find the real values in the internal db, example of a response:
             מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי
             
-            ||| car_id:3 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |
-                car_id:16 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |
-                car_id:7 ,, reason:*give 1 line of reason for this car choice* ++ מספר דלתות ,, נפח תא מטען (ליטר) ,, מערכת בטיחות |@|@|
+            ||| car_id:3 ,, reason:*give 1 line of reason for this car choice* ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
+                car_id:16 ,, reason:*give 1 line of reason for this car choice* ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
+                car_id:7 ,, reason:*give 1 line of reason for this car choice* ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |@|@|
             """),
             # ("system", "מידע היסטורי רלוונטי של חיפושים קודמים שלך בכדי לחסוך זמן: {context_info}"),
             ("placeholder", "{chat_history}"),
