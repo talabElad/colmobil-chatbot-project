@@ -125,7 +125,7 @@ def handle_post_main_chat():
             car_fields_dict['field_name'] = "reason"
             car_fields_dict['field_value'] = reason
             car_fields_list.append(car_fields_dict)
-            car_fields_dict['field_name'] = "basic_price_nis"
+            car_fields_dict['field_name'] = dict_english_hebrew_columns["basic_price_nis"]
             car_fields_dict['field_value'] = basic_price_nis
             car_fields_list.append(car_fields_dict)
             
