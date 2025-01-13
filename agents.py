@@ -90,7 +90,7 @@ for column in columns:
     name = column['name']
     if "embeddings" in name:
         continue
-    if not name in ["model","car_id","reason","car_web_link","image_url","brand", "basic_price_nis ", "additional_description"]:
+    if not name in ["model","car_id","reason","car_web_link","image_url","brand", "basic_price_nis", "additional_description"]:
         clean_columns_dynamic_fields.append(name)
     data_type = column['type']
     enum_values = "N/A"
