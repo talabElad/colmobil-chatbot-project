@@ -184,6 +184,7 @@ class MasterAgent:
             בשדה "reason" הסבר בשורה אחת מדוע הרכב מתאים ללקוח, תוך התייחסות לצרכים שהציג.
             בנוסף, בחר 3 שדות דינמיים מתוך הרשימה הבאה (מלבד העמודות car_web_link, image_url, brand, model, basic_price_nis, additional_description שאינן רצויות כשדות):
             {clean_columns_dynamic_fields.__str__()}
+            אתה לא מוסיף ערך לשדה דינמי, רק את השם של השדה(אני אחר כך מוציא את הערך)
 
             מבנה התגובה:
 
