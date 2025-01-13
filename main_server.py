@@ -123,6 +123,7 @@ def handle_post_main_chat():
             car_fields_dict['field_value'] = car_web_link
             
             print(car_fields_dict,"-----------------------------------------------")
+            car_fields_dict = {}
             car_fields_list.append(car_fields_dict)
             car_fields_dict['field_name'] = "reason"
             car_fields_dict['field_value'] = reason
