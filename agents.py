@@ -196,9 +196,9 @@ class MasterAgent:
             דוגמה:
                     מצאתי רכבים שאני בטוח שיתאימו לך, אתה כמובן יכול להמשיך להכווין אותי:
                     |||
-                    car_id:3 ,, reason:סיבה קצרה ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
-                    car_id:16 ,, reason:סיבה קצרה ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
-                    car_id:7 ,, reason:סיבה קצרה ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |@|@|
+                    car_id:3 ,, reason:חוויית נהיגה ספורטיבית לצד חיסכון בדלק ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
+                    car_id:16 ,, reason:רכב משפחתי אידיאלי עם מרחב פנימי מרשים.++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |
+                    car_id:7 ,, reason:רמת בטיחות גבוהה ותא מטען מרווח שמתאים לעגלת תינוק. ++ num_of_doors ,, trunk_capacity_liters ,, safety_system_type |@|@|
 
             דגשים נוספים:
 
