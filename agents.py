@@ -183,6 +183,8 @@ class MasterAgent:
             that are different from the constant fields(car_id, reason).
             dynamic fields comes only from the next list of field names:
             {clean_columns_dynamic_fields.__str__()}
+            which not includes use car_web_link, image_url, brand, model.
+            
             
             3 dynamic changing fields, comes without value, just to know what the relevant fields are, use ++ to seperate between the constant fields and values and the dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
