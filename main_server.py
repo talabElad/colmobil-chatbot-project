@@ -154,7 +154,7 @@ def handle_post_main_chat():
     # llm_response = response.split('|||')[0]
     # response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     llm_response = response.split('|||')[0]
-    response_data = {"llm_response": response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
+    response_data = {"llm_response": llm_response,"car_suggestions":car_suggestions_list,"user_id":data['user_id']}
     print(response_data)
     response = {}
     response = make_response(jsonify(response_data),200)
