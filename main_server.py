@@ -114,8 +114,8 @@ def handle_post_main_chat():
             car_fields_dict['field_name'] = dict_english_hebrew_columns["model"]
             car_fields_dict['field_value'] = model
             car_fields_list.append(car_fields_dict)
-            car_fields_dict = {}
-            car_fields_dict['field_name'] = "image_url"
+            car_fields_dict = {}       
+            car_fields_dict['field_name'] = "Image_URL"
             car_fields_dict['field_value'] = image_url
             car_fields_list.append(car_fields_dict)
             car_fields_dict = {}
