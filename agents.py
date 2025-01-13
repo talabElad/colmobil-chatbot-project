@@ -182,7 +182,7 @@ class MasterAgent:
 
                     לכל הצעה חובה לכלול שני שדות קבועים: car_id ו-reason.
                     בשדה "reason" הסבר בשורה אחת מדוע הרכב מתאים ללקוח, תוך התייחסות לצרכים שהציג.
-                    בנוסף, בחר 3 שדות דינמיים מתוך הרשימה הבאה (מלבד עמודות כמו car_web_link, image_url, brand, model, basic_price_nis, additional_description שאינן רלוונטיות):
+                    בנוסף, בחר 3 שדות דינמיים מתוך הרשימה הבאה (מלבד העמודות car_web_link, image_url, brand, model, basic_price_nis, additional_description שאינן רצויות כשדות משום שבין כו וכו אחר כך אני מוציא את הערכים האלו ומציג ללקוח):
                     {clean_columns_dynamic_fields.__str__()}
                     מבנה התגובה:
 
