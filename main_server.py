@@ -93,7 +93,6 @@ def handle_post_main_chat():
                     reason = value_clean
             for dynamic_field in dynamic_fields:
                 key_clean = dynamic_field.strip()
-                value_clean = dynamic_field.split(':')[1].strip()
                 dynamic_fields_keys_list.append(key_clean)            
 
             print(constant_fields)
