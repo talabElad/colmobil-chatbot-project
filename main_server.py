@@ -82,7 +82,7 @@ def handle_post_main_chat():
             dynamic_fields_keys_list = []
             car_fields = car_fields_str.split('++')
             constant_fields = car_fields[0].split(',,')
-            dynamic_fields = car_fields[0].split(',,')
+            dynamic_fields = car_fields[1].split(',,')
             for constant_field in constant_fields:
                 key_clean = constant_field.split(':')[0].strip()
                 value_clean = constant_field.split(':')[1].strip()
@@ -95,13 +95,16 @@ def handle_post_main_chat():
                 key_clean = dynamic_field.strip()
                 value_clean = dynamic_field.split(':')[1].strip()
                 dynamic_fields_keys_list.append(key_clean)            
-        
 
-            cursor.execute(f"""
+            print(constant_fields)
+            print(dynamic_fields)
+            sql_query = f"""
                 SELECT brand, model, image_url, car_web_link, {', '.join(dynamic_fields_keys_list)}
                 FROM cars_collection
                 WHERE car_id = {car_id}
-                LIMIT 1;""")
+                LIMIT 1;"""
+            print(sql_query)
+            cursor.execute(sql_query)
 
             results = cursor.fetchone()
 
