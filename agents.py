@@ -179,9 +179,10 @@ class MasterAgent:
             {column_details_lines.__str__()}
             
             when you find matching cars to the user between 3 to 1, you should use a specific format as a response, the format is the same as the next example. 
-            there is 6 constant value: car_id, reason.
+            there is 2 constant value: car_id, reason.
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
-            and the others values can change depend on what you think the user is interested in, which means 2 contant fields and 3 dynamic changing fields, not including the constant fields.
+            and the others values can change depend on what you think the user is interested in, which means 2 contant fields and 3 dynamic changing fields,
+            not including the constant fields(car_id, reason) and not including model, brand, image_url, car_web_link.
             3 dynamic changing fields, comes without value, just to know what the relevant fields are, use ++ to seperate between the constant fields and values and the dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
