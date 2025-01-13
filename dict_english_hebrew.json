@@ -38,5 +38,6 @@
     "vehicle_warranty_years": "אחריות רכב (שנים)",
     "battery_warranty_years": "אחריות סוללה (שנים)",
     "image_url": "Image URL",
-    "car_web_link": "קישור לרכב"
+    "car_web_link": "קישור לרכב",
+    "ground_clearance_mm": "גובה מקומי (מ\"מ)"
 }
