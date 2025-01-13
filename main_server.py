@@ -125,6 +125,9 @@ def handle_post_main_chat():
             car_fields_dict['field_name'] = "car_web_link"
             car_fields_dict['field_value'] = car_web_link
             car_fields_list.append(car_fields_dict)
+            car_fields_dict['field_name'] = "reason"
+            car_fields_dict['field_value'] = reason
+            car_fields_list.append(car_fields_dict)
             
             for dynamic_key, dynamic_value in zip(dynamic_fields_keys_list, dynamic_fields_values):
                 car_fields_dict = {}
