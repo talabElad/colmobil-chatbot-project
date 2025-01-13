@@ -33,6 +33,7 @@
     "multimedia_system_type": "מערכת מולטימדיה",
     "screen_size": "גודל מסך (אינץ')",
     "wheel_rim_size_max": "גודל חישוק גלגל (אינץ') - מקסימלי",
+    "wheel_rim_size_min": "גודל חישוק גלגל (אינץ') - מינימלי",
     "front_lighting_type": "תאורה קדמית",
     "climate_control_system_type": "מערכת בקרת אקלים",
     "vehicle_warranty_years": "אחריות רכב (שנים)",
