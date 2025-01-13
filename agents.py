@@ -148,7 +148,7 @@ sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 chat_leading_questions_doc = Document("leading_questions.docx")
 
 database_column_names_hebrew = Document("database_column_names_hebrew.docx")
-
+print(column_details_lines.__str__())
 class MasterAgent:
     def __init__(self):
         self.r = redis.Redis(host='localhost', port=6379, db=0)
