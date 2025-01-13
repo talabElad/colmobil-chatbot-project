@@ -80,10 +80,6 @@ engine = create_engine(connection_string)
 # Use SQLAlchemy MetaData to reflect the database schema
 inspector = inspect(engine)
 
-
-
-
-
 # Get column names for the 'cars_collection' table
 columns = inspector.get_columns('cars_collection')
 
@@ -182,7 +178,8 @@ class MasterAgent:
             there is 2 constant value: car_id, reason.
             in the reason field explain why the suggested car is suited for the user and make a correlation with their needs.
             and the others values can change depend on what you think the user is interested in, which means 2 contant fields and 3 dynamic changing fields,
-            not including the constant fields(car_id, reason) and not including model, brand, image_url, car_web_link.
+            that are different from the constant fields(car_id, reason).
+            do not send brand, model, image_url, car_web_link in the response.
             3 dynamic changing fields, comes without value, just to know what the relevant fields are, use ++ to seperate between the constant fields and values and the dynamic changing fields.
             when you want to start suggesting cars, you need start with ||| and than between the car information add |, to help seperate the different cars, 
             and when you finish suggesting cars, do not add another text, finish with the car suggesting, add the |@|@| finish sign and than stop.
