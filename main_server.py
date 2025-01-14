@@ -6,8 +6,8 @@ from pydantic import __init__
 from sqlalchemy import create_engine
 import json
 import numpy as np
-# from agents import MasterAgent
-# agent_executor = MasterAgent()
+from agents import MasterAgent
+agent_executor = MasterAgent()
 load_dotenv(".env")
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
