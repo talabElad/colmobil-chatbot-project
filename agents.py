@@ -67,7 +67,8 @@ doc_key = 'leading_questions.docx'
 
 response_doc = s3.get_object(Bucket=bucket_name, Key=doc_key)
 word_file_stream = BytesIO(response_doc['Body'].read())
-document = Document(word_file_stream)
+chat_leading_questions_doc = Document(word_file_stream)
+chat_leading_questions_doc_text = "\n".join([paragraph.text for paragraph in chat_leading_questions_doc.paragraphs])
 
 
 os.environ["OPENAI_API_TYPE"]="azure"
@@ -180,7 +181,7 @@ class MasterAgent:
             הצעת רכבים: תמיד תשתדל להציע 3 רכבים סופיים מתוך מאגר המידע הפנימי, אלא אם בקשות הלקוח מגבילות את החיפוש למספר קטן יותר של רכבים, וזה בסדר אם לא תמצא רכבים שעונים לדרישות.
             הבנת הצרכים: במידת הצורך, עליך "להגדיל ראש" ולהתחשב בנסיבות מיוחדות שהלקוח מציין. לדוגמה, אם ללקוח יש 4 ילדים, נסה להתחשב במספר המושבים ברכב שתציע.
             במקרים שבהם חסר לך מידע על מנת לסנן את הרכבים ל-3 הצעות מתאימות, השתמש בשאלות מנחות כמו:
-            {chat_leading_questions_doc.paragraphs}
+            {chat_leading_questions_doc_text}
 
             הנחיות חשובות לבניית שאילתות SQL:
             תמיד בדוק את שמות העמודות הקיימות בטבלה לפני ביצוע שאילתה.
