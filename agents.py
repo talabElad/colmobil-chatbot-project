@@ -24,6 +24,8 @@ from docx import Document
 import redis
 from langchain_aws import ChatBedrockConverse
 from langchain_openai import AzureChatOpenAI
+import boto3
+from io import BytesIO
 
 
 
@@ -55,6 +57,17 @@ database="databasecolmobil"
 #     provider="amazon",
 #     stop_sequences = ["|@|@|"]
 # )
+
+s3 = boto3.client('s3')
+
+# Bucket and keys
+bucket_name = 'colmobil-s3'
+doc_key = 'leading_questions.docx'
+
+
+response_doc = s3.get_object(Bucket=bucket_name, Key=doc_key)
+word_file_stream = BytesIO(response_doc['Body'].read())
+document = Document(word_file_stream)
 
 
 os.environ["OPENAI_API_TYPE"]="azure"
@@ -145,9 +158,8 @@ db = CustomSQLDatabase(engine=engine)
 # Create SQLDatabaseToolkit with the database and the language model
 sql_toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
-chat_leading_questions_doc = Document("leading_questions.docx")
 
-database_column_names_hebrew = Document("database_column_names_hebrew.docx")
+
 print(column_details_lines.__str__())
 print(clean_columns_dynamic_fields)
 class MasterAgent:

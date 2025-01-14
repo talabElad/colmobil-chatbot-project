@@ -12,6 +12,17 @@ load_dotenv(".env")
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import redis
+import boto3
+
+s3 = boto3.client('s3')
+
+# Bucket and keys
+bucket_name = 'colmobil-s3'
+json_key = 'dict_english_hebrew.json'
+
+# Step 1: Download JSON file
+response_json = s3.get_object(Bucket=bucket_name, Key=json_key)
+dict_english_hebrew_columns = json.load(response_json['Body'])  # Load JSON content
 
 
 app = Flask(__name__)
@@ -40,8 +51,8 @@ version = cursor.fetchone()
 
 CORS(app)  # Enable CORS for all routes
 
-with open('dict_english_hebrew.json', 'r') as file:
-    dict_english_hebrew_columns = json.load(file)
+# with open('dict_english_hebrew.json', 'r') as file:
+#     dict_english_hebrew_columns = json.load(file)
 # Define a route for POST requests
 @app.route('/main_chat', methods=['POST'])
 def handle_post_main_chat():
