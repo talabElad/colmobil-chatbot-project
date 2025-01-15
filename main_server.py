@@ -40,7 +40,13 @@ database="databasecolmobil"
 
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
 
-engine = create_engine(connection_string)
+engine = create_engine(
+    connection_string,
+    pool_size=10,  # Number of persistent connections in the pool
+    max_overflow=5,  # Additional connections allowed beyond the pool
+    pool_recycle=1800,  # Recycle connections every 1800 seconds (30 minutes)
+    pool_pre_ping=True  # Validate connections before using
+)
 
 connection = engine.connect()
 raw_connection = connection.connection
