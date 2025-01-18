@@ -41,6 +41,13 @@ database="databasecolmobil"
 
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
 
+engine = create_engine(
+    connection_string,
+    pool_size=10,
+    max_overflow=5,
+    pool_recycle=1800,
+    pool_pre_ping=True
+)
 
 def reset_engine():
     global engine
