@@ -13,6 +13,7 @@ from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import redis
 import boto3
+from threading import Timer
 
 s3 = boto3.client('s3')
 
@@ -40,13 +41,21 @@ database="databasecolmobil"
 
 connection_string = f"mysql+pymysql://{username}:{password}@{endpoint}/{database}"
 
-engine = create_engine(
-    connection_string,
-    pool_size=10,  # Number of persistent connections in the pool
-    max_overflow=5,  # Additional connections allowed beyond the pool
-    pool_recycle=1800,  # Recycle connections every 1800 seconds (30 minutes)
-    pool_pre_ping=True  # Validate connections before using
-)
+
+def reset_engine():
+    global engine
+    print("Resetting database engine...")
+    engine.dispose()
+    engine = create_engine(
+        connection_string,
+        pool_size=10,
+        max_overflow=5,
+        pool_recycle=1800,
+        pool_pre_ping=True
+    )
+    Timer(86400, reset_engine).start()  # Reset every 24 hours
+
+reset_engine()
 
 connection = engine.connect()
 raw_connection = connection.connection
@@ -189,4 +198,3 @@ def handle_post_main_chat():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5001)
-    #print(check_for_groceries_options("סוגי השמנים שברשותי להציע הם: ||| 323:שמן זית,434:שמן קנולה,43:שמן חמניות"))
